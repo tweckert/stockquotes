@@ -52,7 +52,7 @@ public class DefaultYahooFinanceImportService implements ImportService {
                             .build()
                             .parse(reader);
 
-            for (CSVRecord csvRecord : csvRecords) {
+            for (final CSVRecord csvRecord : csvRecords) {
 
                 final StockQuote stockQuote = csvRecordToStockQuoteConverter.convert(csvRecord);
 
