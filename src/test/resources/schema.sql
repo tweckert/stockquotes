@@ -1,0 +1,23 @@
+DROP TABLE IF EXISTS QUOTES;
+DROP TABLE IF EXISTS STOCKS;
+
+CREATE TABLE STOCKS
+(
+    id   BIGINT PRIMARY KEY,
+    isin VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE QUOTES
+(
+    id        BIGINT PRIMARY KEY,
+    stock_id  BIGINT      NOT NULL,
+    date      DATE        NOT NULL,
+    open      DECIMAL(15) NOT NULL,
+    close     DECIMAL(15) NOT NULL,
+    high      DECIMAL(15) NOT NULL,
+    low       DECIMAL(15) NOT NULL,
+    adj_close DECIMAL(15) NOT NULL,
+    volume    DECIMAL(15) NOT NULL,
+    CONSTRAINT FK_STOCK FOREIGN KEY (stock_id) REFERENCES STOCKS (id)
+);

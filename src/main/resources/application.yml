@@ -1,0 +1,5 @@
+iso8601:
+  dateformat: "yyyy-MM-dd"
+spring:
+  main:
+    banner-mode: off
