@@ -9,7 +9,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.Assert;
 
-import javax.finance.stockquotes.converter.StringToDateConverter;
+import javax.finance.stockquotes.converter.DateConverter;
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.entity.StockQuote;
 import java.math.BigDecimal;
@@ -36,7 +36,7 @@ public class StockQuoteRepositoryTests {
         dirtyStock.setName("iShares Core MSCI World UCITS ETF USD (Acc)");
         final Stock stock = stockRepository.save(dirtyStock);
 
-        final Converter<String, Date> stringToDateConverter = new StringToDateConverter("yyyy-MM-dd");
+        final Converter<String, Date> stringToDateConverter = new DateConverter("yyyy-MM-dd");
 
         final Date date = stringToDateConverter.convert("2009-09-25");
         final BigDecimal open = new BigDecimal("24.820520");

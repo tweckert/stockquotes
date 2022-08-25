@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Component
-public class CsvRecordToStockQuoteConverter implements Converter<CSVRecord, StockQuote> {
+public class StockQuoteConverter implements Converter<CSVRecord, StockQuote> {
 
     private static final String DATE = "Date";
     private static final String OPEN = "Open";
@@ -25,7 +25,7 @@ public class CsvRecordToStockQuoteConverter implements Converter<CSVRecord, Stoc
     private final Converter<String, Date> dateConverter;
 
     @Autowired
-    public CsvRecordToStockQuoteConverter(@Qualifier("iso8601DateConverter") final Converter<String, Date> dateConverter) {
+    public StockQuoteConverter(@Qualifier("iso8601DateConverter") final Converter<String, Date> dateConverter) {
         this.dateConverter = dateConverter;
     }
 

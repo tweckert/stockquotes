@@ -2,7 +2,6 @@ package javax.finance.stockquotes.service.impl;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +23,13 @@ public class DefaultYahooFinanceImportService implements ImportService {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultYahooFinanceImportService.class);
 
     private final CrudRepository<StockQuote, Long> stockQuoteRepository;
-    private final Converter<CSVRecord, StockQuote> csvRecordToStockQuoteConverter;
+    private final Converter<CSVRecord, StockQuote> stockQuoteConverter;
 
     @Autowired
     public DefaultYahooFinanceImportService(final CrudRepository<StockQuote, Long> stockQuoteRepository,
-                                            final Converter<CSVRecord, StockQuote> csvRecordToStockQuoteConverter) {
+                                            final Converter<CSVRecord, StockQuote> stockQuoteConverter) {
         this.stockQuoteRepository = stockQuoteRepository;
-        this.csvRecordToStockQuoteConverter = csvRecordToStockQuoteConverter;
+        this.stockQuoteConverter = stockQuoteConverter;
     }
 
     @Override
@@ -40,10 +39,7 @@ public class DefaultYahooFinanceImportService implements ImportService {
             return;
         }
 
-        Reader reader = null;
-        try {
-
-            reader = new FileReader(file);
+        try (final Reader reader = new FileReader(file)) {
 
             final Iterable<CSVRecord> csvRecords =
                     CSVFormat.DEFAULT.builder()
@@ -54,7 +50,7 @@ public class DefaultYahooFinanceImportService implements ImportService {
 
             for (final CSVRecord csvRecord : csvRecords) {
 
-                final StockQuote stockQuote = csvRecordToStockQuoteConverter.convert(csvRecord);
+                final StockQuote stockQuote = stockQuoteConverter.convert(csvRecord);
 
                 if (stockQuote == null) {
                     continue;
@@ -65,13 +61,10 @@ public class DefaultYahooFinanceImportService implements ImportService {
                 stockQuoteRepository.save(stockQuote);
             }
         } catch (final Exception e) {
-
             if (LOG.isErrorEnabled()) {
                 LOG.error(StringUtils.join("Error importing historical stock data from file '",
                         file.getAbsolutePath(), "': ", e.getMessage()), e);
             }
-
-            IOUtils.closeQuietly(reader);
         }
     }
 
