@@ -9,9 +9,8 @@ import java.util.Date;
 public class StockQuote {
 
     @Id
-    @Column(name = "id", updatable = false, nullable = false)
-    @SequenceGenerator(name = "StockQuoteSeq", sequenceName = "STOCK_QUOTE_SEQ", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "StockQuoteSeq")
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(value = TemporalType.DATE)

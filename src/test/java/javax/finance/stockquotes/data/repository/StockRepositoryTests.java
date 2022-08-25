@@ -2,23 +2,30 @@ package javax.finance.stockquotes.data.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.Assert;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.finance.stockquotes.data.entity.Stock;
+import javax.finance.stockquotes.test.PostgresTestContainer;
+import javax.transaction.Transactional;
 
-@SpringBootTest()
+@SpringBootTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@Testcontainers
+@Transactional
 public class StockRepositoryTests {
+
+    @Container
+    public static PostgresTestContainer POSTGRES_TEST_CONTAINER = PostgresTestContainer.getInstance();
 
     @Autowired
     private StockRepository stockRepository;
 
+    @Sql(scripts = "/delete.sql")
     @Test
     public void saveTest() {
 

@@ -3,22 +3,22 @@ package javax.finance.stockquotes.service.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.repository.StockQuoteRepository;
 import javax.finance.stockquotes.data.repository.StockRepository;
+import javax.transaction.Transactional;
 import java.io.File;
 
 @SpringBootTest()
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@Testcontainers
+@Transactional
 public class DefaultYahooFinanceImportServiceTest {
 
     @Autowired
@@ -48,6 +48,11 @@ public class DefaultYahooFinanceImportServiceTest {
         final long expectedCount = 3262;
         Assert.isTrue(stockQuoteRepository.count() == expectedCount,
                 StringUtils.join("Yahoo Finance import service should have imported ", expectedCount, " stock quotes"));
+
+        stockQuoteRepository
+                .findAll()
+                .forEach(stockQuote ->
+                        Assert.isTrue(stock.getIsin().equals(stockQuote.getStock().getIsin()), "stock quote stock isin should be equal to stock isin"));
     }
 
 }

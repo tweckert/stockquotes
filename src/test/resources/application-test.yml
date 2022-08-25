@@ -1,12 +1,20 @@
+iso8601:
+  dateformat: "yyyy-MM-dd"
+
 logging:
   level:
-    root: INFO
+    root: ERROR
     javax.finance.stockquotes: DEBUG
 
 spring:
   datasource:
-    url: 'jdbc:h2:mem:testdb'
-    driverClassName: org.h2.Driver
-    username: sa
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:14.1:////test_stockquotes
+    username: postgres
+    password: postgres
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: 'true'
+  liquibase:
+    change-log: classpath:liquibase/changelog.xml
+  main:
+    banner-mode: off

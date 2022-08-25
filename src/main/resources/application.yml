@@ -1,5 +1,22 @@
 iso8601:
   dateformat: "yyyy-MM-dd"
+
+logging:
+  level:
+    root: INFO
+
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/stockquotes
+    username: postgres
+    password: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: 'false'
+  liquibase:
+    change-log: classpath:liquibase/changelog.xml
   main:
     banner-mode: off
