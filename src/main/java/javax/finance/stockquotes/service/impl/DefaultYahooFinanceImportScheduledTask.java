@@ -104,7 +104,7 @@ public class DefaultYahooFinanceImportScheduledTask implements ScheduledTask, In
 
             final Stock stock = createStockIfAbsent(isin, wkn, name);
 
-            stockQuoteRepository.deleteAll();
+            stockQuoteRepository.deleteByStock(stock);
             importService.importHistoricalData(stock, importFile);
 
             return importFile.getName();
