@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 
-@Service
+@Service("yahooFinanceImportService")
 public class DefaultYahooFinanceImportService implements ImportService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultYahooFinanceImportService.class);
@@ -48,6 +48,7 @@ public class DefaultYahooFinanceImportService implements ImportService {
                             .build()
                             .parse(reader);
 
+            int count = 0;
             for (final CSVRecord csvRecord : csvRecords) {
 
                 final StockQuote stockQuote = stockQuoteConverter.convert(csvRecord);
@@ -59,6 +60,11 @@ public class DefaultYahooFinanceImportService implements ImportService {
                 stockQuote.setStock(stock);
 
                 stockQuoteRepository.save(stockQuote);
+                count++;
+            }
+
+            if (LOG.isInfoEnabled()) {
+                LOG.info(StringUtils.join("Imported ", count, " stock quotes for stock '", stock.getWkn(), "'"));
             }
         } catch (final Exception e) {
             if (LOG.isErrorEnabled()) {

@@ -20,3 +20,28 @@ spring:
     change-log: classpath:liquibase/changelog.xml
   main:
     banner-mode: off
+
+quotes:
+  connect-timeout-millis: 1000
+  read-timeout-millis: 3000
+  yahoo-finance:
+    cron: 0 0/1 * * * ?
+    work-dir: /home/weckert/Downloads/yahoo-finance
+    downloads:
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/EUNL.DE?period1={0}&period2={1}&interval=1d&events=history&includeAdjustedClose=true
+        file: A0RPWH.csv
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/CSSPX.MI?period1={0}&period2={1}&interval=1d&events=history&includeAdjustedClose=true
+        file: A0YEDG.csv
+    imports:
+      -
+        isin: IE00B4L5Y983
+        wkn: A0RPWH
+        name: iShares Core MSCI World UCITS ETF USD (Acc)
+        file: A0RPWH.csv
+      -
+        isin: IE00B5BMR087
+        wkn: A0YEDG
+        name: iShares Core S&P 500 UCITS ETF USD (Acc)
+        file: A0YEDG.csv

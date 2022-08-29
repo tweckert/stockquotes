@@ -14,6 +14,9 @@ public class Stock {
     @Column(nullable = false, unique = true)
     private String isin;
 
+    @Column(nullable = false, unique = true)
+    private String wkn;
+
     @Column(nullable = false)
     private String name;
 
@@ -31,6 +34,14 @@ public class Stock {
 
     public void setIsin(final String isin) {
         this.isin = isin;
+    }
+
+    public String getWkn() {
+        return wkn;
+    }
+
+    public void setWkn(final String wkn) {
+        this.wkn = wkn;
     }
 
     public String getName() {

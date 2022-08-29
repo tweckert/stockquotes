@@ -32,6 +32,7 @@ public class StockRepositoryTests {
         // GIVEN
         final Stock dirtyStock = new Stock();
         dirtyStock.setIsin("IE00B4L5Y983");
+        dirtyStock.setWkn("A0RPWH");
         dirtyStock.setName("iShares Core MSCI World UCITS ETF USD (Acc)");
 
         // WHEN
