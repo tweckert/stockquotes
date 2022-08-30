@@ -10,6 +10,7 @@ import javax.finance.stockquotes.data.entity.StockQuote;
 import javax.finance.stockquotes.data.repository.StockQuoteRepository;
 import javax.finance.stockquotes.web.dto.ChartDto;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
@@ -34,8 +35,8 @@ public class ChartFacade {
         }
 
         final LocalDateTime startTime = LocalDateTime.now();
-        final Date startDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
-        final Date endDate = Date.from(calculateEndTime(startTime, timeRange).toInstant(ZoneOffset.UTC));
+        final Date startDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        final Date endDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
 
         final List<StockQuote> stockQuotes = stockQuoteRepository.findByWkn(wkn, startDate, endDate);
         return createChartDto(stockQuotes);
@@ -48,8 +49,8 @@ public class ChartFacade {
         }
 
         final LocalDateTime startTime = LocalDateTime.now();
-        final Date startDate = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
-        final Date endDate = Date.from(calculateEndTime(startTime, timeRange).toInstant(ZoneOffset.UTC));
+        final Date startDate = Date.from(startTime.atZone(ZoneId.systemDefault()).toInstant());
+        final Date endDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
 
         final List<StockQuote> stockQuotes = stockQuoteRepository.findByIsin(isin, startDate, endDate);
 

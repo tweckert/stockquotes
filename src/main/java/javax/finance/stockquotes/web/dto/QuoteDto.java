@@ -13,7 +13,7 @@ public class QuoteDto implements Serializable {
 
     private final Long timestampSecs;
 
-    @JsonFormat(pattern = StockQuotesConstants.ISO8601_DATE_FORMAT)
+    @JsonFormat(pattern = StockQuotesConstants.ISO8601_DATE_FORMAT, timezone = StockQuotesConstants.TIMEZONE_UTC)
     private final Date date;
 
     private final BigDecimal adjClose;

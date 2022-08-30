@@ -16,6 +16,7 @@ import java.io.File;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 @Service
@@ -43,7 +44,7 @@ public class YahooDownloadScheduledTask implements ScheduledTask, InitializingBe
     @Override
     public void execute() {
 
-        final LocalDateTime endTime = LocalDateTime.now(ZoneOffset.UTC);
+        final LocalDateTime endTime = LocalDateTime.now(ZoneId.systemDefault());
         final LocalDateTime startTime = endTime.minusYears(10);
 
         for (final YahooConfigurationProperties.DownloadProperties downloadProperties : yahooConfigurationProperties.getDownloads()) {
@@ -60,8 +61,8 @@ public class YahooDownloadScheduledTask implements ScheduledTask, InitializingBe
 
         final String formattedSourceUrl =
                 MessageFormat.format(sourceUrl,
-                        Long.toString(startTime.toEpochSecond(ZoneOffset.UTC)),
-                        Long.toString(endTime.toEpochSecond(ZoneOffset.UTC)));
+                        Long.toString(startTime.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond()),
+                        Long.toString(endTime.atZone(ZoneId.systemDefault()).toInstant().getEpochSecond()));
 
         try {
 
