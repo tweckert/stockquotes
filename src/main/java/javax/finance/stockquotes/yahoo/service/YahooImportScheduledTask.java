@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.service.impl;
+package javax.finance.stockquotes.yahoo.service;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -8,72 +8,72 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.finance.stockquotes.config.YahooFinanceStockQuoteProperties;
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.repository.StockQuoteRepository;
 import javax.finance.stockquotes.data.repository.StockRepository;
 import javax.finance.stockquotes.service.ImportService;
 import javax.finance.stockquotes.service.ScheduledTask;
+import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service("yahooFinanceImportScheduledTask")
-public class DefaultYahooFinanceImportScheduledTask implements ScheduledTask, InitializingBean {
+@Service
+public class YahooImportScheduledTask implements ScheduledTask, InitializingBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultYahooFinanceImportScheduledTask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(YahooImportScheduledTask.class);
 
-    private final Map<String, YahooFinanceStockQuoteProperties.ImportProperties> importPropertiesByWkn;
-    private final File workDir;
+    private final YahooConfigurationProperties yahooConfigurationProperties;
+    private final Map<String, YahooConfigurationProperties.ImportProperties> importPropertiesByWkn;
     private final StockQuoteRepository stockQuoteRepository;
     private final StockRepository stockRepository;
     private final ImportService importService;
-    private final PlatformTransactionManager platformTransactionManager;
+    private final TransactionTemplate transactionTemplate;
 
     @Autowired
-    public DefaultYahooFinanceImportScheduledTask(final YahooFinanceStockQuoteProperties stockQuoteProperties,
-                                                  @Value("${quotes.yahoo-finance.work-dir}") final String workDir,
-                                                  final StockQuoteRepository stockQuoteRepository,
-                                                  final StockRepository stockRepository,
-                                                  final ImportService importService,
-                                                  final PlatformTransactionManager platformTransactionManager) {
+    public YahooImportScheduledTask(final YahooConfigurationProperties yahooConfigurationProperties,
+                                    final StockQuoteRepository stockQuoteRepository,
+                                    final StockRepository stockRepository,
+                                    final ImportService importService,
+                                    final PlatformTransactionManager platformTransactionManager) {
         this.importPropertiesByWkn = new HashMap<>();
-        this.workDir = new File(workDir.trim());
+        this.yahooConfigurationProperties = yahooConfigurationProperties;
         this.stockQuoteRepository = stockQuoteRepository;
         this.stockRepository = stockRepository;
         this.importService = importService;
-        this.platformTransactionManager = platformTransactionManager;
-
-        for (final YahooFinanceStockQuoteProperties.ImportProperties importProperties : stockQuoteProperties.getImports()) {
-            this.importPropertiesByWkn.put(importProperties.getWkn(), importProperties);
-        }
+        this.transactionTemplate = new TransactionTemplate(platformTransactionManager);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        FileUtils.createParentDirectories(workDir);
+
+        this.importPropertiesByWkn.clear();
+        for (final YahooConfigurationProperties.ImportProperties importProperties : yahooConfigurationProperties.getImports()) {
+            this.importPropertiesByWkn.put(importProperties.getWkn(), importProperties);
+        }
+
+        FileUtils.createParentDirectories(yahooConfigurationProperties.getWorkDir());
     }
 
     @Override
     @Scheduled(fixedDelay = 1000)
     public void execute() {
 
-        final Collection<File> importFiles = FileUtils.listFiles(workDir, new String[]{"csv"}, false);
+        final Collection<File> importFiles = FileUtils.listFiles(yahooConfigurationProperties.getWorkDir(), new String[]{"csv"}, false);
         for (final File importFile : importFiles) {
 
             try {
 
                 final String wkn = FilenameUtils.getBaseName(importFile.getName());
 
-                final YahooFinanceStockQuoteProperties.ImportProperties importProperties = importPropertiesByWkn.get(wkn);
+                final YahooConfigurationProperties.ImportProperties importProperties = importPropertiesByWkn.get(wkn);
                 if (importProperties == null) {
 
                     if (LOG.isErrorEnabled()) {
@@ -95,7 +95,6 @@ public class DefaultYahooFinanceImportScheduledTask implements ScheduledTask, In
 
     protected void importStockQuotes(final String isin, final String wkn, final String name, final File importFile) {
 
-        final TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
         transactionTemplate.execute(status -> {
 
             if (LOG.isInfoEnabled()) {
@@ -103,7 +102,6 @@ public class DefaultYahooFinanceImportScheduledTask implements ScheduledTask, In
             }
 
             final Stock stock = createStockIfAbsent(isin, wkn, name);
-
             stockQuoteRepository.deleteByStock(stock);
             importService.importHistoricalData(stock, importFile);
 

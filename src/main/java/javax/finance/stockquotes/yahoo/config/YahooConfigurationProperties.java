@@ -1,16 +1,18 @@
-package javax.finance.stockquotes.config;
+package javax.finance.stockquotes.yahoo.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.List;
 
 @Component
-@ConfigurationProperties(prefix = "quotes.yahoo-finance")
-public class YahooFinanceStockQuoteProperties {
+@ConfigurationProperties(prefix = "quotes.yahoo")
+public class YahooConfigurationProperties {
 
     private List<DownloadProperties> downloads;
     private List<ImportProperties> imports;
+    private File workDir;
 
     public List<DownloadProperties> getDownloads() {
         return downloads;
@@ -28,8 +30,16 @@ public class YahooFinanceStockQuoteProperties {
         this.imports = imports;
     }
 
+    public File getWorkDir() {
+        return workDir;
+    }
+
+    public void setWorkDir(final String workDir) {
+        this.workDir = new File(workDir.trim());
+    }
+
     @Component
-    @ConfigurationProperties(prefix = "quotes.yahoo-finance.downloads")
+    @ConfigurationProperties(prefix = "quotes.yahoo.downloads")
     public static class DownloadProperties {
 
         private String url;
@@ -53,7 +63,7 @@ public class YahooFinanceStockQuoteProperties {
     }
 
     @Component
-    @ConfigurationProperties(prefix = "quotes.yahoo-finance.imports")
+    @ConfigurationProperties(prefix = "quotes.yahoo.imports")
     public static class ImportProperties {
 
         private String isin;

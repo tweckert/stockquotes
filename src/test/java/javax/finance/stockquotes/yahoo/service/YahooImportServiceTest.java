@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.service.impl;
+package javax.finance.stockquotes.yahoo.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.io.File;
 @ActiveProfiles("test")
 @Testcontainers
 @Transactional
-public class DefaultYahooFinanceImportServiceTest {
+public class YahooImportServiceTest {
 
     @Autowired
     private StockRepository stockRepository;
@@ -28,7 +28,7 @@ public class DefaultYahooFinanceImportServiceTest {
     private StockQuoteRepository stockQuoteRepository;
 
     @Autowired
-    private DefaultYahooFinanceImportService defaultYahooFinanceImportService;
+    private YahooImportService yahooImportService;
 
     @Test
     public void importHistoricalDataTest() throws Exception {
@@ -40,10 +40,10 @@ public class DefaultYahooFinanceImportServiceTest {
         dirtyStock.setName("iShares Core MSCI World UCITS ETF USD (Acc)");
         final Stock stock = stockRepository.save(dirtyStock);
 
-        final File file = ResourceUtils.getFile("classpath:data/IWDA.L.csv");
+        final File file = ResourceUtils.getFile("classpath:yahoo/A0RPWH.csv");
 
         // WHEN
-        defaultYahooFinanceImportService.importHistoricalData(stock, file);
+        yahooImportService.importHistoricalData(stock, file);
 
         // THEN
         final long expectedCount = 3262;

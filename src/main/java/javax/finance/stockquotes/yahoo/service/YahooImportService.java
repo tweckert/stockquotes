@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.service.impl;
+package javax.finance.stockquotes.yahoo.service;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -7,27 +7,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.entity.StockQuote;
+import javax.finance.stockquotes.data.repository.StockQuoteRepository;
 import javax.finance.stockquotes.service.ImportService;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 
-@Service("yahooFinanceImportService")
-public class DefaultYahooFinanceImportService implements ImportService {
+@Service
+public class YahooImportService implements ImportService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultYahooFinanceImportService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(YahooImportService.class);
 
-    private final CrudRepository<StockQuote, Long> stockQuoteRepository;
+    private final StockQuoteRepository stockQuoteRepository;
     private final Converter<CSVRecord, StockQuote> stockQuoteConverter;
 
     @Autowired
-    public DefaultYahooFinanceImportService(final CrudRepository<StockQuote, Long> stockQuoteRepository,
-                                            final Converter<CSVRecord, StockQuote> stockQuoteConverter) {
+    public YahooImportService(final StockQuoteRepository stockQuoteRepository,
+                              final Converter<CSVRecord, StockQuote> stockQuoteConverter) {
         this.stockQuoteRepository = stockQuoteRepository;
         this.stockQuoteConverter = stockQuoteConverter;
     }

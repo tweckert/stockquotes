@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.converter;
+package javax.finance.stockquotes.yahoo.converter;
 
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Component
-public class StockQuoteConverter implements Converter<CSVRecord, StockQuote> {
+public class YahooStockQuoteConverter implements Converter<CSVRecord, StockQuote> {
 
     private static final String DATE = "Date";
     private static final String OPEN = "Open";
@@ -25,7 +25,7 @@ public class StockQuoteConverter implements Converter<CSVRecord, StockQuote> {
     private final Converter<String, Date> dateConverter;
 
     @Autowired
-    public StockQuoteConverter(@Qualifier("iso8601DateConverter") final Converter<String, Date> dateConverter) {
+    public YahooStockQuoteConverter(@Qualifier("yahooDateConverter") final Converter<String, Date> dateConverter) {
         this.dateConverter = dateConverter;
     }
 

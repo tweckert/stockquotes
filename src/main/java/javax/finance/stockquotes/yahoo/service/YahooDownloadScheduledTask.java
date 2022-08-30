@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.service.impl;
+package javax.finance.stockquotes.yahoo.service;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -6,11 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.finance.stockquotes.config.YahooFinanceStockQuoteProperties;
+import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
 import javax.finance.stockquotes.service.DownloadService;
 import javax.finance.stockquotes.service.ScheduledTask;
 import java.io.File;
@@ -19,38 +18,35 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-@Service("yahooFinanceDownloadService")
-public class DefaultYahooFinanceDownloadScheduledTask implements ScheduledTask, InitializingBean {
+@Service
+public class YahooDownloadScheduledTask implements ScheduledTask, InitializingBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultYahooFinanceDownloadScheduledTask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(YahooDownloadScheduledTask.class);
     private static final String DOWNLOAD_POSTFIX = ".download";
 
     private final DownloadService downloadService;
-    private final YahooFinanceStockQuoteProperties stockQuoteProperties;
-    private final File workDir;
+    private final YahooConfigurationProperties yahooConfigurationProperties;
 
     @Autowired
-    public DefaultYahooFinanceDownloadScheduledTask(final DownloadService downloadService,
-                                                    final YahooFinanceStockQuoteProperties stockQuoteProperties,
-                                                    @Value("${quotes.yahoo-finance.work-dir}") final String workDir) {
+    public YahooDownloadScheduledTask(final DownloadService downloadService,
+                                      final YahooConfigurationProperties yahooConfigurationProperties) {
         this.downloadService = downloadService;
-        this.stockQuoteProperties = stockQuoteProperties;
-        this.workDir = new File(workDir.trim());
+        this.yahooConfigurationProperties = yahooConfigurationProperties;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        FileUtils.createParentDirectories(workDir);
+        FileUtils.createParentDirectories(yahooConfigurationProperties.getWorkDir());
     }
 
-    @Scheduled(cron = "${quotes.yahoo-finance.cron}")
+    @Scheduled(cron = "${quotes.yahoo.cron}")
     @Override
     public void execute() {
 
         final LocalDateTime endTime = LocalDateTime.now(ZoneOffset.UTC);
         final LocalDateTime startTime = endTime.minusYears(10);
 
-        for (final YahooFinanceStockQuoteProperties.DownloadProperties downloadProperties : stockQuoteProperties.getDownloads()) {
+        for (final YahooConfigurationProperties.DownloadProperties downloadProperties : yahooConfigurationProperties.getDownloads()) {
 
             final String sourceUrl = downloadProperties.getUrl();
             final String destinationFile = downloadProperties.getFile();
@@ -69,8 +65,10 @@ public class DefaultYahooFinanceDownloadScheduledTask implements ScheduledTask, 
 
         try {
 
+            final File workDir = yahooConfigurationProperties.getWorkDir();
             final String downloadFilename = destinationFilename.trim().concat(DOWNLOAD_POSTFIX);
             final File downloadFile = new File(workDir, downloadFilename);
+
             if (downloadFile.exists()) {
 
                 if (LOG.isInfoEnabled()) {
