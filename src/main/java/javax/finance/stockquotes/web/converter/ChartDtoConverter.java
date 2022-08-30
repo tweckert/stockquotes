@@ -60,7 +60,7 @@ public class ChartDtoConverter implements Converter<List<StockQuote>, ChartDto> 
 
     protected BigDecimal calculatePerformance(final BigDecimal marketValue, final BigDecimal costBasis) {
         return (marketValue.subtract(costBasis))
-                .divide(costBasis, 6, RoundingMode.HALF_UP)
+                .divide(costBasis, 6, RoundingMode.CEILING)
                 .multiply(HUNDRED)
                 .setScale(2, RoundingMode.CEILING);
     }
