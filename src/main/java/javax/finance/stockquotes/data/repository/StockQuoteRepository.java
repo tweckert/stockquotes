@@ -16,12 +16,12 @@ public interface StockQuoteRepository extends PagingAndSortingRepository<StockQu
 
     List<StockQuote> deleteByStock(final Stock stock);
 
-    @Query("select distinct q from StockQuote q inner join Stock s on s = q.stock where s.wkn = :wkn and q.date <= :startDate and q.date > :endDate order by q.date asc")
+    @Query("select distinct q from StockQuote q inner join Stock s on s = q.stock where s.wkn = :wkn and q.date <= :startDate and q.date >= :endDate order by q.date asc")
     List<StockQuote> findByWkn(@Param("wkn") final String wkn,
                                @Param("startDate") final Date startDate,
                                @Param("endDate") final Date endDate);
 
-    @Query("select distinct q from StockQuote q inner join Stock s on s = q.stock where s.isin = :isin and q.date <= :startDate and q.date > :endDate order by q.date asc")
+    @Query("select distinct q from StockQuote q inner join Stock s on s = q.stock where s.isin = :isin and q.date <= :startDate and q.date >= :endDate order by q.date asc")
     List<StockQuote> findByIsin(@Param("isin") final String isin,
                                 @Param("startDate") final Date startDate,
                                 @Param("endDate") final Date endDate);

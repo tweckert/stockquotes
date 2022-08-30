@@ -10,7 +10,6 @@ import org.springframework.util.Assert;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.finance.stockquotes.yahoo.converter.YahooDateConverter;
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.entity.StockQuote;
 import javax.finance.stockquotes.test.PostgresTestContainer;
@@ -33,6 +32,9 @@ public class StockQuoteRepositoryTests {
     @Autowired
     private StockQuoteRepository stockQuoteRepository;
 
+    @Autowired
+    private Converter<String, Date> yahooDateConverter;
+
     @Sql(scripts = "/delete.sql")
     @Test
     public void saveTest() {
@@ -44,15 +46,13 @@ public class StockQuoteRepositoryTests {
         dirtyStock.setName("iShares Core MSCI World UCITS ETF USD (Acc)");
         final Stock stock = stockRepository.save(dirtyStock);
 
-        final Converter<String, Date> stringToDateConverter = new YahooDateConverter("yyyy-MM-dd");
-
-        final Date date = stringToDateConverter.convert("2009-09-25");
+        final Date date = yahooDateConverter.convert("2009-09-25");
         final BigDecimal open = new BigDecimal("24.820520");
         final BigDecimal close = new BigDecimal("24.773529");
         final BigDecimal high = new BigDecimal("24.259439");
         final BigDecimal low = new BigDecimal("23.973881");
         final BigDecimal adjClose = new BigDecimal("25.330000");
-        final BigDecimal volume = new BigDecimal("208861");
+        final Integer volume = Integer.valueOf("208861");
 
         final StockQuote dirtyStockQuote = new StockQuote();
         dirtyStockQuote.setDate(date);

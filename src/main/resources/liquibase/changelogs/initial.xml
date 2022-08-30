@@ -33,7 +33,7 @@
             <column name="open" type="numeric(19, 6)">
                 <constraints nullable="false"/>
             </column>
-            <column name="volume" type="numeric(19, 6)">
+            <column name="volume" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
             <column name="stock_id" type="BIGINT"/>

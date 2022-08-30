@@ -1,39 +1,46 @@
 package javax.finance.stockquotes.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.finance.stockquotes.constant.StockQuotesConstants;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class QuoteDto implements Serializable {
 
     private static final long serialVersionUID = 6679112907916970452L;
 
-    private final long timestampSecs;
-    private final String iso8601Date;
-    private final BigDecimal adjClose;
-    private final BigDecimal volume;
+    private final Long timestampSecs;
 
-    public QuoteDto(final long timestampSecs, final String iso8601Date,
-                    final BigDecimal adjClose, final BigDecimal volume) {
+    @JsonFormat(pattern = StockQuotesConstants.ISO8601_DATE_FORMAT)
+    private final Date date;
+
+    private final BigDecimal adjClose;
+
+    private final Integer volume;
+
+    public QuoteDto(final Long timestampSecs, final Date date,
+                    final BigDecimal adjClose, final Integer volume) {
         this.timestampSecs = timestampSecs;
-        this.iso8601Date = iso8601Date;
+        this.date = date;
         this.adjClose = adjClose;
         this.volume = volume;
     }
 
-    public long getTimestampSecs() {
+    public Long getTimestampSecs() {
         return timestampSecs;
     }
 
-    public String getIso8601Date() {
-        return iso8601Date;
+    public Date getDate() {
+        return date;
     }
 
     public BigDecimal getAdjClose() {
         return adjClose;
     }
 
-    public BigDecimal getVolume() {
+    public Integer getVolume() {
         return volume;
     }
-
 }

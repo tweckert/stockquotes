@@ -5,10 +5,9 @@ import org.springframework.stereotype.Component;
 
 import javax.finance.stockquotes.data.entity.StockQuote;
 import javax.finance.stockquotes.web.dto.QuoteDto;
-import javax.finance.stockquotes.constant.StockQuotesConstants;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
+import java.math.RoundingMode;
+import java.util.Date;
 
 @Component
 public class QuoteDtConverter implements Converter<StockQuote, QuoteDto> {
@@ -20,15 +19,12 @@ public class QuoteDtConverter implements Converter<StockQuote, QuoteDto> {
             return null;
         }
 
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(StockQuotesConstants.ISO8601_DATE_FORMAT);
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        final Long timestampSecs = stockQuote.getDate().getTime() / 1000;
+        final Date date = stockQuote.getDate();
+        final BigDecimal adjClose = stockQuote.getAdjClose().setScale(2, RoundingMode.HALF_UP);
+        final Integer volume = stockQuote.getVolume();
 
-        final long timestampSecs = stockQuote.getDate().getTime() / 1000;
-        final String iso8601Date = simpleDateFormat.format(stockQuote.getDate());
-        final BigDecimal adjClose = stockQuote.getAdjClose();
-        final BigDecimal volume = stockQuote.getVolume();
-
-        return new QuoteDto(timestampSecs, iso8601Date, adjClose, volume);
+        return new QuoteDto(timestampSecs, date, adjClose, volume);
     }
 
 }

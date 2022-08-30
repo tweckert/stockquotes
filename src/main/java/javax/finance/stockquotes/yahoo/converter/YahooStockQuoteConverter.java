@@ -63,6 +63,13 @@ public class YahooStockQuoteConverter implements Converter<CSVRecord, StockQuote
         return null;
     }
 
+    protected Integer convertToInteger(final String str) {
+        if (StringUtils.isNotBlank(str)) {
+            return Integer.valueOf(str);
+        }
+        return null;
+    }
+
     protected void convertOpen(final StockQuote stockQuote, final String rawOpen) {
         final BigDecimal open = convertToBigDecimal(rawOpen);
         if (open != null) {
@@ -92,7 +99,7 @@ public class YahooStockQuoteConverter implements Converter<CSVRecord, StockQuote
     }
 
     protected void convertVolume(final StockQuote stockQuote, final String rawVolume) {
-        final BigDecimal volume = convertToBigDecimal(rawVolume);
+        final Integer volume = convertToInteger(rawVolume);
         if (volume != null) {
             stockQuote.setVolume(volume);
         }

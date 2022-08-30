@@ -33,7 +33,7 @@ public class StockQuote {
     private BigDecimal low;
 
     @Column(name = "volume", nullable = false)
-    private BigDecimal volume;
+    private Integer volume;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id")
@@ -95,11 +95,11 @@ public class StockQuote {
         this.low = low;
     }
 
-    public BigDecimal getVolume() {
+    public Integer getVolume() {
         return volume;
     }
 
-    public void setVolume(final BigDecimal volume) {
+    public void setVolume(final Integer volume) {
         this.volume = volume;
     }
 
