@@ -22,7 +22,7 @@ quotes:
   connect-timeout-millis: 1000
   read-timeout-millis: 3000
   yahoo:
-    cron: 0 0/1 * * * ?
+    cron: 0 0/15 * * * ?
     work-dir: /home/weckert/Downloads/yahoo-finance
     downloads:
       -
