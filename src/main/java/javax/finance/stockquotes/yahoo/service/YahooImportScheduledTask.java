@@ -17,6 +17,7 @@ import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.repository.StockRepository;
 import javax.finance.stockquotes.service.ImportService;
 import javax.finance.stockquotes.service.ScheduledTask;
+import javax.finance.stockquotes.config.QuotesConfigurationProperties;
 import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
 import java.io.File;
 import java.util.Collection;
@@ -30,18 +31,23 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
     private static final Logger LOG = LoggerFactory.getLogger(YahooImportScheduledTask.class);
 
     private final YahooConfigurationProperties yahooConfigurationProperties;
+    private final QuotesConfigurationProperties quotesConfigurationProperties;
     private final Map<String, YahooConfigurationProperties.ImportProperties> importPropertiesByFilename;
+    private final Map<String, QuotesConfigurationProperties.StockProperties> stockPropertiesByWkn;
     private final StockRepository stockRepository;
     private final ImportService importService;
     private final TransactionTemplate transactionTemplate;
 
     @Autowired
     public YahooImportScheduledTask(final YahooConfigurationProperties yahooConfigurationProperties,
+                                    final QuotesConfigurationProperties quotesConfigurationProperties,
                                     final StockRepository stockRepository,
                                     final ImportService importService,
                                     final PlatformTransactionManager platformTransactionManager) {
         this.importPropertiesByFilename = new HashMap<>();
+        this.stockPropertiesByWkn = new HashMap<>();
         this.yahooConfigurationProperties = yahooConfigurationProperties;
+        this.quotesConfigurationProperties = quotesConfigurationProperties;
         this.stockRepository = stockRepository;
         this.importService = importService;
         this.transactionTemplate = new TransactionTemplate(platformTransactionManager);
@@ -53,6 +59,11 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
         this.importPropertiesByFilename.clear();
         for (final YahooConfigurationProperties.ImportProperties importProperties : yahooConfigurationProperties.getImports()) {
             this.importPropertiesByFilename.put(importProperties.getFile(), importProperties);
+        }
+
+        this.stockPropertiesByWkn.clear();
+        for (final QuotesConfigurationProperties.StockProperties stockProperties : quotesConfigurationProperties.getStocks()) {
+            this.stockPropertiesByWkn.put(stockProperties.getWkn().toUpperCase(), stockProperties);
         }
 
         FileUtils.createParentDirectories(yahooConfigurationProperties.getWorkDir());
@@ -80,8 +91,19 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
                 }
 
                 final String wkn = importProperties.getWkn();
-                final String isin = importProperties.getIsin();
-                final String name = importProperties.getName();
+
+                final QuotesConfigurationProperties.StockProperties stockProperties = stockPropertiesByWkn.get(wkn);
+                if (stockProperties == null) {
+
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error(StringUtils.join("No stock properties found for WKN '", wkn, "'"));
+                    }
+
+                    continue;
+                }
+
+                final String isin = stockProperties.getIsin();
+                final String name = stockProperties.getName();
                 final Frequency frequency = importProperties.getFrequency();
 
                 importStockQuotes(isin, wkn, name, importFile, frequency);

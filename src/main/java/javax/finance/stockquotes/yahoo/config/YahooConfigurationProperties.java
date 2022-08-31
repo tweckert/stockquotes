@@ -1,5 +1,6 @@
 package javax.finance.stockquotes.yahoo.config;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -67,34 +68,16 @@ public class YahooConfigurationProperties {
     @ConfigurationProperties(prefix = "quotes.yahoo.imports")
     public static class ImportProperties {
 
-        private String isin;
         private String wkn;
-        private String name;
         private String file;
         private Frequency frequency;
 
-        public String getIsin() {
-            return isin;
-        }
-
-        public void setIsin(final String isin) {
-            this.isin = isin;
-        }
-
         public String getWkn() {
-            return wkn;
+            return StringUtils.isNotBlank(wkn) ? wkn.toUpperCase() : wkn;
         }
 
         public void setWkn(final String wkn) {
             this.wkn = wkn;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
         }
 
         public String getFile() {
