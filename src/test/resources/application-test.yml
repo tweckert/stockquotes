@@ -1,11 +1,11 @@
 logging:
   level:
-    root: ERROR
+    root: INFO
     javax.finance.stockquotes: DEBUG
 
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:postgresql:14.1:////test_stockquotes
-    username: postgres
-    password: postgres
+    username: test
+    password: test

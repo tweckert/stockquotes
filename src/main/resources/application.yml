@@ -1,6 +1,10 @@
 logging:
   level:
     root: ERROR
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    org.springframework.orm.jpa: INFO
+    org.springframework.transaction: INFO
+    javax.finance.stockquotes: INFO
 
 spring:
   jpa:
