@@ -8,6 +8,11 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: 'false'
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url:
+    username:
+    password:
   liquibase:
     change-log: classpath:liquibase/changelog.xml
   main:

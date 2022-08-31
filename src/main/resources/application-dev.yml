@@ -9,7 +9,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/stockquotes
     username: postgres
     password: postgres
-    show-sql: 'true'
   thymeleaf:
     cache: false
 
