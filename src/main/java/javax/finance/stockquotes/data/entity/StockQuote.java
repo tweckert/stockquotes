@@ -35,6 +35,10 @@ public class StockQuote {
     @Column(name = "volume", nullable = false)
     private Integer volume;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "frequency", nullable = false)
+    private Frequency frequency;
+
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_id")
     private Stock stock;
@@ -109,6 +113,14 @@ public class StockQuote {
 
     public void setStock(final Stock stock) {
         this.stock = stock;
+    }
+
+    public Frequency getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(final Frequency frequency) {
+        this.frequency = frequency;
     }
 
 }

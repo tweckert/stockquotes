@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.finance.stockquotes.data.entity.Frequency;
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.entity.StockQuote;
 import javax.finance.stockquotes.test.PostgresTestContainer;
@@ -53,6 +54,7 @@ public class StockQuoteRepositoryTests {
         final BigDecimal low = new BigDecimal("23.973881");
         final BigDecimal adjClose = new BigDecimal("25.330000");
         final Integer volume = Integer.valueOf("208861");
+        final Frequency frequency = Frequency.DAILY;
 
         final StockQuote dirtyStockQuote = new StockQuote();
         dirtyStockQuote.setDate(date);
@@ -63,6 +65,7 @@ public class StockQuoteRepositoryTests {
         dirtyStockQuote.setAdjClose(adjClose);
         dirtyStockQuote.setVolume(volume);
         dirtyStockQuote.setStock(stock);
+        dirtyStockQuote.setFrequency(frequency);
 
         // WHEN
         final StockQuote savedStockQuote = stockQuoteRepository.save(dirtyStockQuote);

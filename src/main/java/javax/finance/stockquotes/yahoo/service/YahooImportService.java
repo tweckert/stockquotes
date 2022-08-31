@@ -1,5 +1,6 @@
 package javax.finance.stockquotes.yahoo.service;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
+import javax.finance.stockquotes.data.entity.Frequency;
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.entity.StockQuote;
 import javax.finance.stockquotes.data.repository.StockQuoteRepository;
@@ -16,6 +18,9 @@ import javax.finance.stockquotes.service.ImportService;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class YahooImportService implements ImportService {
@@ -33,7 +38,7 @@ public class YahooImportService implements ImportService {
     }
 
     @Override
-    public void importHistoricalData(final Stock stock, final File file) {
+    public void importHistoricalData(final Stock stock, final Frequency frequency, final File file) {
 
         if (file == null || stock == null || stock.getId() == null || stock.getId().longValue() == 0) {
             return;
@@ -41,15 +46,24 @@ public class YahooImportService implements ImportService {
 
         try (final Reader reader = new FileReader(file)) {
 
-            final Iterable<CSVRecord> csvRecords =
+            final Iterable<CSVRecord> csvRecordsIterable =
                     CSVFormat.DEFAULT.builder()
                             .setHeader()
                             .setSkipHeaderRecord(true)
                             .build()
                             .parse(reader);
 
-            int count = 0;
-            for (final CSVRecord csvRecord : csvRecords) {
+            final List<CSVRecord> csvRecordList =
+                    StreamSupport.stream(csvRecordsIterable.spliterator(), false).collect(Collectors.toList());
+
+            if (CollectionUtils.isEmpty(csvRecordList)) {
+                return;
+            }
+
+            stockQuoteRepository.deleteByStockAndFrequency(stock, frequency);
+
+            int importCount = 0;
+            for (final CSVRecord csvRecord : csvRecordList) {
 
                 final StockQuote stockQuote = stockQuoteConverter.convert(csvRecord);
 
@@ -58,13 +72,14 @@ public class YahooImportService implements ImportService {
                 }
 
                 stockQuote.setStock(stock);
+                stockQuote.setFrequency(frequency);
 
                 stockQuoteRepository.save(stockQuote);
-                count++;
+                importCount++;
             }
 
             if (LOG.isInfoEnabled()) {
-                LOG.info(StringUtils.join("Imported ", count, " stock quotes for stock '", stock.getWkn(), "'"));
+                LOG.info(StringUtils.join("Imported ", importCount, " stock quotes for stock '", stock.getWkn(), "'"));
             }
         } catch (final Exception e) {
             if (LOG.isErrorEnabled()) {

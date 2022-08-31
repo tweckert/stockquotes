@@ -24,6 +24,9 @@
             <column name="date" type="date">
                 <constraints nullable="false"/>
             </column>
+            <column name="frequency" type="VARCHAR(16)">
+                <constraints nullable="false"/>
+            </column>
             <column name="high" type="numeric(19, 6)">
                 <constraints nullable="false"/>
             </column>

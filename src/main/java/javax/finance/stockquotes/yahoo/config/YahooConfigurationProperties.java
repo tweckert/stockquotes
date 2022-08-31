@@ -3,6 +3,7 @@ package javax.finance.stockquotes.yahoo.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.finance.stockquotes.data.entity.Frequency;
 import java.io.File;
 import java.util.List;
 
@@ -70,6 +71,7 @@ public class YahooConfigurationProperties {
         private String wkn;
         private String name;
         private String file;
+        private Frequency frequency;
 
         public String getIsin() {
             return isin;
@@ -101,6 +103,14 @@ public class YahooConfigurationProperties {
 
         public void setFile(final String file) {
             this.file = file;
+        }
+
+        public Frequency getFrequency() {
+            return frequency;
+        }
+
+        public void setFrequency(final String frequencyName) {
+            this.frequency = Frequency.of(frequencyName);
         }
     }
 

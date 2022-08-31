@@ -27,18 +27,56 @@ quotes:
     downloads:
       -
         url: https://query1.finance.yahoo.com/v7/finance/download/EUNL.DE?period1={0}&period2={1}&interval=1d&events=history&includeAdjustedClose=true
-        file: A0RPWH.csv
+        file: A0RPWH_daily.csv
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/EUNL.DE?period1={0}&period2={1}&interval=1wk&events=history&includeAdjustedClose=true
+        file: A0RPWH_weekly.csv
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/EUNL.DE?period1={0}&period2={1}&interval=1mo&events=history&includeAdjustedClose=true
+        file: A0RPWH_monthly.csv
       -
         url: https://query1.finance.yahoo.com/v7/finance/download/CSSPX.MI?period1={0}&period2={1}&interval=1d&events=history&includeAdjustedClose=true
-        file: A0YEDG.csv
+        file: A0YEDG_daily.csv
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/CSSPX.MI?period1={0}&period2={1}&interval=1wk&events=history&includeAdjustedClose=true
+        file: A0YEDG_weekly.csv
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/CSSPX.MI?period1={0}&period2={1}&interval=1mo&events=history&includeAdjustedClose=true
+        file: A0YEDG_monthly.csv
     imports:
       -
         isin: IE00B4L5Y983
         wkn: A0RPWH
         name: iShares Core MSCI World UCITS ETF USD (Acc)
-        file: A0RPWH.csv
+        file: A0RPWH_daily.csv
+        frequency: daily
+      -
+        isin: IE00B4L5Y983
+        wkn: A0RPWH
+        name: iShares Core MSCI World UCITS ETF USD (Acc)
+        file: A0RPWH_weekly.csv
+        frequency: weekly
+      -
+        isin: IE00B4L5Y983
+        wkn: A0RPWH
+        name: iShares Core MSCI World UCITS ETF USD (Acc)
+        file: A0RPWH_monthly.csv
+        frequency: monthly
       -
         isin: IE00B5BMR087
         wkn: A0YEDG
         name: iShares Core S&P 500 UCITS ETF USD (Acc)
-        file: A0YEDG.csv
+        file: A0YEDG_daily.csv
+        frequency: daily
+      -
+        isin: IE00B5BMR087
+        wkn: A0YEDG
+        name: iShares Core S&P 500 UCITS ETF USD (Acc)
+        file: A0YEDG_weekly.csv
+        frequency: weekly
+      -
+        isin: IE00B5BMR087
+        wkn: A0YEDG
+        name: iShares Core S&P 500 UCITS ETF USD (Acc)
+        file: A0YEDG_monthly.csv
+        frequency: monthly

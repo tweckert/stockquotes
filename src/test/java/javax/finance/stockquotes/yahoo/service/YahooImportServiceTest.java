@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.finance.stockquotes.data.entity.Frequency;
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.repository.StockQuoteRepository;
 import javax.finance.stockquotes.data.repository.StockRepository;
@@ -40,10 +41,11 @@ public class YahooImportServiceTest {
         dirtyStock.setName("iShares Core MSCI World UCITS ETF USD (Acc)");
         final Stock stock = stockRepository.save(dirtyStock);
 
+        final Frequency frequency = Frequency.DAILY;
         final File file = ResourceUtils.getFile("classpath:yahoo/A0RPWH.csv");
 
         // WHEN
-        yahooImportService.importHistoricalData(stock, file);
+        yahooImportService.importHistoricalData(stock, frequency, file);
 
         // THEN
         final long expectedCount = 3262;

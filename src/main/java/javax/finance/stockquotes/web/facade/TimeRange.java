@@ -4,23 +4,23 @@ import org.apache.commons.lang3.StringUtils;
 
 public enum TimeRange {
 
-    ONE_WEEK,
-    MONTH_TO_DATE,
-    ONE_MONTH,
+    WEEK,
+    MTD,
+    MONTH,
     TWO_MONTHS,
     THREE_MONTHS,
     SIX_MONTHS,
-    YEAR_TO_DATE,
-    ONE_YEAR,
+    YTD,
+    YEAR,
     TWO_YEARS,
     THREE_YEARS,
     FIVE_YEARS,
-    MAXIMUM;
+    MAX;
 
     public static TimeRange of(final String timeRangeName) {
 
         if (StringUtils.isBlank(timeRangeName)) {
-            return ONE_MONTH;
+            return MONTH;
         }
 
         final String upperCaseTimeRangeName = timeRangeName.toUpperCase();
@@ -30,7 +30,7 @@ public enum TimeRange {
             }
         }
 
-        return ONE_MONTH;
+        return MONTH;
     }
 
 }

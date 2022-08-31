@@ -53,7 +53,7 @@ public class ChartDtoConverter implements Converter<List<StockQuote>, ChartDto> 
                 calculatePerformance(latestStockQuote.getAdjClose(), oldestStockQuote.getAdjClose());
 
         final ChartDto chartDto =
-                new ChartDto(stock.getWkn(), stock.getIsin(), stock.getName(), quoteDtoList, performance);
+                new ChartDto(stock.getWkn(), stock.getIsin(), stock.getName(), performance, null, null, quoteDtoList);
 
         return chartDto;
     }

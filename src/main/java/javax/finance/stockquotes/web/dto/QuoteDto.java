@@ -14,11 +14,11 @@ public class QuoteDto implements Serializable {
     private final Long timestampSecs;
 
     @JsonFormat(pattern = StockQuotesConstants.ISO8601_DATE_FORMAT, timezone = StockQuotesConstants.TIMEZONE_UTC)
-    private final Date date;
+    private Date date;
 
-    private final BigDecimal adjClose;
+    private BigDecimal adjClose;
 
-    private final Integer volume;
+    private Integer volume;
 
     public QuoteDto(final Long timestampSecs, final Date date,
                     final BigDecimal adjClose, final Integer volume) {
@@ -36,11 +36,24 @@ public class QuoteDto implements Serializable {
         return date;
     }
 
+    public void setDate(final Date date) {
+        this.date = date;
+    }
+
     public BigDecimal getAdjClose() {
         return adjClose;
+    }
+
+    public void setAdjClose(final BigDecimal adjClose) {
+        this.adjClose = adjClose;
     }
 
     public Integer getVolume() {
         return volume;
     }
+
+    public void setVolume(final Integer volume) {
+        this.volume = volume;
+    }
+
 }
