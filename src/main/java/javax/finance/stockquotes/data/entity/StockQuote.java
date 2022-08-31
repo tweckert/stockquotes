@@ -5,7 +5,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "quotes")
+@Table(name = "quotes", indexes = {
+        @Index(name = "idx_date", columnList = "date"),
+        @Index(name = "idx_frequency", columnList = "frequency"),
+        @Index(name = "idx_stock_date_frequency", columnList = "stock_id, date, frequency", unique = true)
+})
 public class StockQuote {
 
     @Id

@@ -3,7 +3,11 @@ package javax.finance.stockquotes.data.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "stocks")
+@Table(name = "stocks", indexes = {
+        @Index(name = "idx_wkn", columnList = "wkn", unique = true),
+        @Index(name = "idx_isin", columnList = "isin", unique = true),
+        @Index(name = "idx_wkn_isin", columnList = "isin, wkn", unique = true)
+})
 public class Stock {
 
     @Id

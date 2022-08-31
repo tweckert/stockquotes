@@ -15,25 +15,25 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="quotesPK"/>
             </column>
-            <column name="adj_close" type="numeric(19, 6)">
+            <column name="adj_close" type="numeric(19, 2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="close" type="numeric(19, 6)">
+            <column name="close" type="numeric(19, 2)">
                 <constraints nullable="false"/>
             </column>
             <column name="date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="frequency" type="VARCHAR(16)">
+            <column name="frequency" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="high" type="numeric(19, 6)">
+            <column name="high" type="numeric(19, 2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="low" type="numeric(19, 6)">
+            <column name="low" type="numeric(19, 2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="open" type="numeric(19, 6)">
+            <column name="open" type="numeric(19, 2)">
                 <constraints nullable="false"/>
             </column>
             <column name="volume" type="INTEGER">
@@ -48,28 +48,51 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="stocksPK"/>
             </column>
-            <column name="isin" type="VARCHAR(12)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="wkn" type="VARCHAR(6)">
+            <column name="isin" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="wkn" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
 
     <changeSet author="weckert (generated)" id="initial-3">
-        <addUniqueConstraint columnNames="isin" constraintName="UC_STOCKSISIN_COL" tableName="stocks"/>
+        <addUniqueConstraint columnNames="isin" constraintName="idx_isin" tableName="stocks"/>
     </changeSet>
 
     <changeSet author="weckert (generated)" id="initial-4">
+        <addUniqueConstraint columnNames="stock_id, date, frequency" constraintName="idx_stock_date_frequency" tableName="quotes"/>
+    </changeSet>
+
+    <changeSet author="weckert (generated)" id="initial-5">
+        <addUniqueConstraint columnNames="wkn" constraintName="idx_wkn" tableName="stocks"/>
+    </changeSet>
+
+    <changeSet author="weckert (generated)" id="initial-6">
+        <addUniqueConstraint columnNames="isin, wkn" constraintName="idx_wkn_isin" tableName="stocks"/>
+    </changeSet>
+
+    <changeSet author="weckert (generated)" id="initial-7">
+        <createIndex indexName="idx_date" tableName="quotes">
+            <column name="date"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="weckert (generated)" id="initial-8">
+        <createIndex indexName="idx_frequency" tableName="quotes">
+            <column name="frequency"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="weckert (generated)" id="initial-9">
         <addForeignKeyConstraint baseColumnNames="stock_id" baseTableName="quotes"
-                                 constraintName="FKC_STOCKS"
-                                 deferrable="false" initiallyDeferred="false"
-                                 referencedColumnNames="id" referencedTableName="stocks"
-                                 validate="true"/>
+                                 constraintName="fk_stock" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="stocks" validate="true"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -9,15 +9,13 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.finance.stockquotes.config.QuotesConfigurationProperties;
 import javax.finance.stockquotes.data.entity.Frequency;
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.repository.StockRepository;
 import javax.finance.stockquotes.service.ImportService;
 import javax.finance.stockquotes.service.ScheduledTask;
-import javax.finance.stockquotes.config.QuotesConfigurationProperties;
 import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
 import java.io.File;
 import java.util.Collection;
@@ -36,21 +34,18 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
     private final Map<String, QuotesConfigurationProperties.StockProperties> stockPropertiesByWkn;
     private final StockRepository stockRepository;
     private final ImportService importService;
-    private final TransactionTemplate transactionTemplate;
 
     @Autowired
     public YahooImportScheduledTask(final YahooConfigurationProperties yahooConfigurationProperties,
                                     final QuotesConfigurationProperties quotesConfigurationProperties,
                                     final StockRepository stockRepository,
-                                    final ImportService importService,
-                                    final PlatformTransactionManager platformTransactionManager) {
+                                    final ImportService importService) {
         this.importPropertiesByFilename = new HashMap<>();
         this.stockPropertiesByWkn = new HashMap<>();
         this.yahooConfigurationProperties = yahooConfigurationProperties;
         this.quotesConfigurationProperties = quotesConfigurationProperties;
         this.stockRepository = stockRepository;
         this.importService = importService;
-        this.transactionTemplate = new TransactionTemplate(platformTransactionManager);
     }
 
     @Override
@@ -116,18 +111,13 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
     protected void importStockQuotes(final String isin, final String wkn, final String name,
                                      final File importFile, final Frequency frequency) {
 
-        transactionTemplate.execute(status -> {
+        if (LOG.isInfoEnabled()) {
+            LOG.info(StringUtils.join("Importing stock quotes from import file '",
+                    importFile.getAbsolutePath(), "'"));
+        }
 
-            if (LOG.isInfoEnabled()) {
-                LOG.info(StringUtils.join("Importing stock quotes from import file '",
-                        importFile.getAbsolutePath(), "'"));
-            }
-
-            final Stock stock = createStockIfAbsent(isin, wkn, name);
-            importService.importHistoricalData(stock, frequency, importFile);
-
-            return importFile.getName();
-        });
+        final Stock stock = createStockIfAbsent(isin, wkn, name);
+        importService.importHistoricalData(stock, frequency, importFile);
     }
 
     protected Stock createStockIfAbsent(final String isin, final String wkn, final String name) {
