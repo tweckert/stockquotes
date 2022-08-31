@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import javax.finance.stockquotes.constant.StockQuotesConstants;
+import javax.finance.stockquotes.constant.StockQuotesApplicationConstants;
 import java.util.Date;
 
 @Component
@@ -20,13 +20,13 @@ public class YahooDateConverter implements Converter<String, Date> {
 
         try {
             return StringUtils.isNotBlank(str)
-                    ? DateUtils.parseDate(str, StockQuotesConstants.ISO8601_DATE_FORMAT)
+                    ? DateUtils.parseDate(str, StockQuotesApplicationConstants.ISO8601_DATE_FORMAT)
                     : null;
         } catch (final Exception e) {
 
             if (LOG.isErrorEnabled()) {
                 LOG.error(StringUtils.join("Error converting source string '", str,
-                        "' with date format '", StockQuotesConstants.ISO8601_DATE_FORMAT, "' to ", Date.class.getName()), e);
+                        "' with date format '", StockQuotesApplicationConstants.ISO8601_DATE_FORMAT, "' to ", Date.class.getName()), e);
             }
 
             return null;

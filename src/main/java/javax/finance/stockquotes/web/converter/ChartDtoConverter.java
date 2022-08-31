@@ -7,42 +7,42 @@ import org.springframework.stereotype.Component;
 
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.entity.StockQuote;
-import javax.finance.stockquotes.web.dto.ChartDto;
-import javax.finance.stockquotes.web.dto.QuoteDto;
+import javax.finance.stockquotes.web.dto.OhlcChartDto;
+import javax.finance.stockquotes.web.dto.OhlcDto;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ChartDtoConverter implements Converter<List<StockQuote>, ChartDto> {
+public class ChartDtoConverter implements Converter<List<StockQuote>, OhlcChartDto> {
 
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100l);
 
-    private final Converter<StockQuote, QuoteDto> quoteConverter;
+    private final Converter<StockQuote, OhlcDto> quoteConverter;
 
     @Autowired
-    public ChartDtoConverter(final Converter<StockQuote, QuoteDto> quoteConverter) {
+    public ChartDtoConverter(final Converter<StockQuote, OhlcDto> quoteConverter) {
         this.quoteConverter = quoteConverter;
     }
 
     @Override
-    public ChartDto convert(final List<StockQuote> stockQuotes) {
+    public OhlcChartDto convert(final List<StockQuote> stockQuotes) {
 
         if (CollectionUtils.isEmpty(stockQuotes)) {
             return null;
         }
 
-        final List<QuoteDto> quoteDtoList = new ArrayList<>();
+        final List<OhlcDto> ohlcDtoList = new ArrayList<>();
         for (final StockQuote stockQuote : stockQuotes) {
 
-            final QuoteDto quoteDto = quoteConverter.convert(stockQuote);
-            if (quoteDto != null) {
-                quoteDtoList.add(quoteDto);
+            final OhlcDto ohlcDto = quoteConverter.convert(stockQuote);
+            if (ohlcDto != null) {
+                ohlcDtoList.add(ohlcDto);
             }
         }
 
-        if (CollectionUtils.isEmpty(quoteDtoList)) {
+        if (CollectionUtils.isEmpty(ohlcDtoList)) {
             return null;
         }
 
@@ -52,10 +52,10 @@ public class ChartDtoConverter implements Converter<List<StockQuote>, ChartDto> 
         final BigDecimal performance =
                 calculatePerformance(latestStockQuote.getAdjClose(), oldestStockQuote.getAdjClose());
 
-        final ChartDto chartDto =
-                new ChartDto(stock.getWkn(), stock.getIsin(), stock.getName(), performance, null, null, quoteDtoList);
+        final OhlcChartDto ohlcChartDto =
+                new OhlcChartDto(stock.getWkn(), stock.getIsin(), stock.getName(), performance, null, null, ohlcDtoList);
 
-        return chartDto;
+        return ohlcChartDto;
     }
 
     protected BigDecimal calculatePerformance(final BigDecimal marketValue, final BigDecimal costBasis) {

@@ -1,0 +1,18 @@
+logging:
+  level:
+    root: INFO
+    javax.finance.stockquotes: DEBUG
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/stockquotes
+    username: postgres
+    password: postgres
+    show-sql: 'true'
+  thymeleaf:
+    cache: false
+
+quotes:
+  yahoo:
+    cron: 0 0/5 * * * ?

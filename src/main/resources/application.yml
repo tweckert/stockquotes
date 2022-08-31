@@ -1,13 +1,8 @@
 logging:
   level:
-    root: INFO
+    root: ERROR
 
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/stockquotes
-    username: postgres
-    password: postgres
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     hibernate:
@@ -17,6 +12,9 @@ spring:
     change-log: classpath:liquibase/changelog.xml
   main:
     banner-mode: off
+  thymeleaf:
+    prefix: file:src/main/resources/templates/
+    cache: true
 
 quotes:
   connect-timeout-millis: 1000

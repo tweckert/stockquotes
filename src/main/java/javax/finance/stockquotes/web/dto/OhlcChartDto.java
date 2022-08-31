@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ChartDto implements Serializable {
+public class OhlcChartDto implements Serializable {
 
     private static final long serialVersionUID = 4508637980500714657L;
 
@@ -16,18 +16,18 @@ public class ChartDto implements Serializable {
     private BigDecimal performance;
     private Frequency frequency;
     private TimeRange range;
-    private List<QuoteDto> quotes;
+    private List<OhlcDto> ohlc;
 
-    public ChartDto(final String wkn, final String isin, final String name,
-                    final BigDecimal performance, final Frequency frequency,
-                    final TimeRange timeRange, final List<QuoteDto> quotes) {
+    public OhlcChartDto(final String wkn, final String isin, final String name,
+                        final BigDecimal performance, final Frequency frequency,
+                        final TimeRange timeRange, final List<OhlcDto> ohlc) {
         this.wkn = wkn;
         this.isin = isin;
         this.name = name;
         this.performance = performance;
         this.frequency = frequency;
         this.range = timeRange;
-        this.quotes = quotes;
+        this.ohlc = ohlc;
     }
 
     public String getWkn() {
@@ -78,11 +78,11 @@ public class ChartDto implements Serializable {
         this.range = range;
     }
 
-    public List<QuoteDto> getQuotes() {
-        return quotes;
+    public List<OhlcDto> getOhlc() {
+        return ohlc;
     }
 
-    public void setQuotes(final List<QuoteDto> quotes) {
-        this.quotes = quotes;
+    public void setOhlc(final List<OhlcDto> ohlc) {
+        this.ohlc = ohlc;
     }
 }

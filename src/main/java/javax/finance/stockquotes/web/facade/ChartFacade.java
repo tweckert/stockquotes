@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.finance.stockquotes.data.entity.Frequency;
 import javax.finance.stockquotes.data.entity.StockQuote;
 import javax.finance.stockquotes.data.repository.StockQuoteRepository;
-import javax.finance.stockquotes.web.dto.ChartDto;
+import javax.finance.stockquotes.web.dto.OhlcChartDto;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -19,33 +19,27 @@ import java.util.List;
 public class ChartFacade {
 
     private final StockQuoteRepository stockQuoteRepository;
-    private final Converter<List<StockQuote>, ChartDto> chartDtoConverter;
+    private final Converter<List<StockQuote>, OhlcChartDto> chartDtoConverter;
 
     @Autowired
     public ChartFacade(final StockQuoteRepository stockQuoteRepository,
-                       final Converter<List<StockQuote>, ChartDto> chartDtoConverter) {
+                       final Converter<List<StockQuote>, OhlcChartDto> chartDtoConverter) {
         this.stockQuoteRepository = stockQuoteRepository;
         this.chartDtoConverter = chartDtoConverter;
     }
 
-    public ChartDto selectChartByWkn(final String wkn, final TimeRange timeRange, final Frequency frequency) {
-
-        if (StringUtils.isBlank(wkn)) {
-            return null;
-        }
-
-        final LocalDateTime startTime = LocalDateTime.now();
-        final Date youngestDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final Date oldestDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
-
-        final List<StockQuote> stockQuotes = stockQuoteRepository.findByWkn(wkn, frequency, youngestDate, oldestDate);
-
-        return createChartDto(stockQuotes, frequency, timeRange);
+    public OhlcChartDto selectOhlcChartByWkn(final String wkn, final TimeRange timeRange, final Frequency frequency) {
+        return selectOhlcChart(true, wkn, timeRange, frequency);
     }
 
-    public ChartDto selectChartByIsin(final String isin, final TimeRange timeRange, final Frequency frequency) {
+    public OhlcChartDto selectOhlcChartByIsin(final String isin, final TimeRange timeRange, final Frequency frequency) {
+        return selectOhlcChart(false, isin, timeRange, frequency);
+    }
 
-        if (StringUtils.isBlank(isin)) {
+    protected OhlcChartDto selectOhlcChart(final boolean stockSymbolIsWkn, final String stockSymbol,
+                                           final TimeRange timeRange, final Frequency frequency) {
+
+        if (StringUtils.isBlank(stockSymbol) || timeRange == null || frequency == null) {
             return null;
         }
 
@@ -53,7 +47,10 @@ public class ChartFacade {
         final Date youngestDate = Date.from(startTime.atZone(ZoneId.systemDefault()).toInstant());
         final Date oldestDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
 
-        final List<StockQuote> stockQuotes = stockQuoteRepository.findByIsin(isin, frequency, youngestDate, oldestDate);
+        final List<StockQuote> stockQuotes =
+                stockSymbolIsWkn
+                        ? stockQuoteRepository.findByWkn(stockSymbol, frequency, youngestDate, oldestDate)
+                        : stockQuoteRepository.findByIsin(stockSymbol, frequency, youngestDate, oldestDate);
 
         return createChartDto(stockQuotes, frequency, timeRange);
     }
@@ -88,19 +85,25 @@ public class ChartFacade {
         }
     }
 
-    protected ChartDto createChartDto(final List<StockQuote> stockQuotes, final Frequency frequency, final TimeRange timeRange) {
+    protected OhlcChartDto createChartDto(final List<StockQuote> stockQuotes, final Frequency frequency, final TimeRange timeRange) {
 
         if (CollectionUtils.isEmpty(stockQuotes) || frequency == null || timeRange == null) {
             return null;
         }
 
-        final ChartDto chartDto = chartDtoConverter.convert(stockQuotes);
-        if (chartDto != null) {
-            chartDto.setFrequency(frequency);
-            chartDto.setRange(timeRange);
+        final OhlcChartDto ohlcChartDto = chartDtoConverter.convert(stockQuotes);
+        if (ohlcChartDto != null) {
+            ohlcChartDto.setFrequency(frequency);
+            ohlcChartDto.setRange(timeRange);
         }
 
-        return chartDto;
+        return ohlcChartDto;
+    }
+
+    public Frequency getFrequency(final TimeRange timeRange, final String frequencyName) {
+        return TimeRange.WEEK.equals(timeRange)
+                ? Frequency.DAILY
+                : Frequency.of(frequencyName);
     }
 
 }
