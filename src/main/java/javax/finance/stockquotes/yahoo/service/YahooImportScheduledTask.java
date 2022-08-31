@@ -2,7 +2,6 @@ package javax.finance.stockquotes.yahoo.service;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.finance.stockquotes.data.entity.Frequency;
 import javax.finance.stockquotes.data.entity.Stock;
-import javax.finance.stockquotes.data.repository.StockQuoteRepository;
 import javax.finance.stockquotes.data.repository.StockRepository;
 import javax.finance.stockquotes.service.ImportService;
 import javax.finance.stockquotes.service.ScheduledTask;
@@ -75,7 +73,7 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
                 if (importProperties == null) {
 
                     if (LOG.isErrorEnabled()) {
-                        LOG.error(StringUtils.join("No Yahoo Finance import properties found for import file '", filename, "'"));
+                        LOG.error(StringUtils.join("No import properties found for import file '", filename, "'"));
                     }
 
                     continue;

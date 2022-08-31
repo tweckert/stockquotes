@@ -14,26 +14,26 @@ import javax.finance.stockquotes.data.entity.Frequency;
 import javax.finance.stockquotes.data.entity.Stock;
 import javax.finance.stockquotes.data.entity.StockQuote;
 import javax.finance.stockquotes.data.repository.StockQuoteRepository;
-import javax.finance.stockquotes.service.ImportService;
+import javax.finance.stockquotes.service.impl.AbstractImportService;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class YahooImportService implements ImportService {
+public class YahooImportService extends AbstractImportService {
 
     private static final Logger LOG = LoggerFactory.getLogger(YahooImportService.class);
 
-    private final StockQuoteRepository stockQuoteRepository;
     private final Converter<CSVRecord, StockQuote> stockQuoteConverter;
 
     @Autowired
     public YahooImportService(final StockQuoteRepository stockQuoteRepository,
                               final Converter<CSVRecord, StockQuote> stockQuoteConverter) {
-        this.stockQuoteRepository = stockQuoteRepository;
+        super(stockQuoteRepository);
         this.stockQuoteConverter = stockQuoteConverter;
     }
 
@@ -60,9 +60,7 @@ public class YahooImportService implements ImportService {
                 return;
             }
 
-            stockQuoteRepository.deleteByStockAndFrequency(stock, frequency);
-
-            int importCount = 0;
+            final List<StockQuote> stockQuoteList = new ArrayList<>();
             for (final CSVRecord csvRecord : csvRecordList) {
 
                 final StockQuote stockQuote = stockQuoteConverter.convert(csvRecord);
@@ -74,16 +72,13 @@ public class YahooImportService implements ImportService {
                 stockQuote.setStock(stock);
                 stockQuote.setFrequency(frequency);
 
-                stockQuoteRepository.save(stockQuote);
-                importCount++;
+                stockQuoteList.add(stockQuote);
             }
 
-            if (LOG.isInfoEnabled()) {
-                LOG.info(StringUtils.join("Imported ", importCount, " stock quotes for stock '", stock.getWkn(), "'"));
-            }
+            importStockQuotes(stock, stockQuoteList, frequency);
         } catch (final Exception e) {
             if (LOG.isErrorEnabled()) {
-                LOG.error(StringUtils.join("Error importing historical stock data from file '",
+                LOG.error(StringUtils.join("Error importing stock data from file '",
                         file.getAbsolutePath(), "': ", e.getMessage()), e);
             }
         }

@@ -16,6 +16,7 @@ public class QuoteDto implements Serializable {
     @JsonFormat(pattern = StockQuotesConstants.ISO8601_DATE_FORMAT, timezone = StockQuotesConstants.TIMEZONE_UTC)
     private Date date;
 
+
     private BigDecimal adjClose;
 
     private Integer volume;

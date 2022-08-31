@@ -35,10 +35,10 @@ public class ChartFacade {
         }
 
         final LocalDateTime startTime = LocalDateTime.now();
-        final Date startDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        final Date endDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
+        final Date youngestDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        final Date oldestDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
 
-        final List<StockQuote> stockQuotes = stockQuoteRepository.findByWkn(wkn, frequency, startDate, endDate);
+        final List<StockQuote> stockQuotes = stockQuoteRepository.findByWkn(wkn, frequency, youngestDate, oldestDate);
 
         return createChartDto(stockQuotes, frequency, timeRange);
     }
@@ -50,10 +50,10 @@ public class ChartFacade {
         }
 
         final LocalDateTime startTime = LocalDateTime.now();
-        final Date startDate = Date.from(startTime.atZone(ZoneId.systemDefault()).toInstant());
-        final Date endDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
+        final Date youngestDate = Date.from(startTime.atZone(ZoneId.systemDefault()).toInstant());
+        final Date oldestDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
 
-        final List<StockQuote> stockQuotes = stockQuoteRepository.findByIsin(isin, frequency, startDate, endDate);
+        final List<StockQuote> stockQuotes = stockQuoteRepository.findByIsin(isin, frequency, youngestDate, oldestDate);
 
         return createChartDto(stockQuotes, frequency, timeRange);
     }
