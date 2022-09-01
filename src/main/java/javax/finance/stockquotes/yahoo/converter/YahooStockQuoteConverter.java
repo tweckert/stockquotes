@@ -14,6 +14,7 @@ import java.util.Date;
 @Component
 public class YahooStockQuoteConverter implements Converter<CSVRecord, StockQuote> {
 
+    private static final String NULL_VALUE = "null";
     private static final String DATE = "Date";
     private static final String OPEN = "Open";
     private static final String HIGH = "High";
@@ -32,7 +33,7 @@ public class YahooStockQuoteConverter implements Converter<CSVRecord, StockQuote
     @Override
     public StockQuote convert(final CSVRecord csvRecord) {
 
-        if (csvRecord == null) {
+        if (!accept(csvRecord)) {
             return null;
         }
 
@@ -47,6 +48,23 @@ public class YahooStockQuoteConverter implements Converter<CSVRecord, StockQuote
         convertVolume(stockQuote, csvRecord.get(VOLUME));
 
         return stockQuote;
+    }
+
+    protected boolean accept(final CSVRecord csvRecord) {
+
+        if (csvRecord == null) {
+            return false;
+        }
+
+        for (int i = 0; i < csvRecord.size(); i++) {
+
+            final String value = csvRecord.get(i);
+            if (StringUtils.isBlank(value) || NULL_VALUE.equalsIgnoreCase(value)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected void convertDate(final StockQuote stockQuote, final String rawDate) {

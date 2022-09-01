@@ -64,8 +64,14 @@ public class YahooImportService extends AbstractImportService {
             for (final CSVRecord csvRecord : csvRecordList) {
 
                 final StockQuote stockQuote = stockQuoteConverter.convert(csvRecord);
-
                 if (stockQuote == null) {
+
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error(StringUtils.join("Unable to import CSV record #",
+                                csvRecord.getRecordNumber(), " from import file '",
+                                file.getName(),"': ", csvRecord.toString()));
+                    }
+
                     continue;
                 }
 
