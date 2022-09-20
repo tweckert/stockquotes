@@ -61,7 +61,7 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
             this.stockPropertiesByWkn.put(stockProperties.getWkn().toUpperCase(), stockProperties);
         }
 
-        FileUtils.createParentDirectories(yahooConfigurationProperties.getWorkDir());
+        FileUtils.forceMkdir(yahooConfigurationProperties.getWorkDir());
     }
 
     @Override
