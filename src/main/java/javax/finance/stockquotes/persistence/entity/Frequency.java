@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.data.entity;
+package javax.finance.stockquotes.persistence.entity;
 
 import org.apache.commons.lang3.StringUtils;
 

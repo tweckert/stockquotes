@@ -1,4 +1,7 @@
-package javax.finance.stockquotes.data.entity;
+package javax.finance.stockquotes.persistence.entity;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 
@@ -54,6 +57,16 @@ public class Stock {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("id", id)
+                .append("isin", isin)
+                .append("wkn", wkn)
+                .append("name", name)
+                .toString();
     }
 
 }

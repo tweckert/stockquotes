@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import javax.finance.stockquotes.data.entity.Stock;
-import javax.finance.stockquotes.data.entity.StockQuote;
+import javax.finance.stockquotes.persistence.entity.Stock;
+import javax.finance.stockquotes.persistence.entity.StockQuote;
 import javax.finance.stockquotes.web.dto.OhlcChartDto;
 import javax.finance.stockquotes.web.dto.OhlcDto;
 import java.math.BigDecimal;

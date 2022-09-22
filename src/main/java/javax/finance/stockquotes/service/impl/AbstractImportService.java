@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.finance.stockquotes.data.entity.Frequency;
-import javax.finance.stockquotes.data.entity.Stock;
-import javax.finance.stockquotes.data.entity.StockQuote;
-import javax.finance.stockquotes.data.repository.StockQuoteRepository;
+import javax.finance.stockquotes.persistence.entity.Frequency;
+import javax.finance.stockquotes.persistence.entity.Stock;
+import javax.finance.stockquotes.persistence.entity.StockQuote;
+import javax.finance.stockquotes.persistence.repository.StockQuoteRepository;
 import javax.finance.stockquotes.service.ImportService;
 import javax.finance.stockquotes.yahoo.service.YahooImportService;
 import java.util.Comparator;
@@ -41,7 +41,7 @@ public abstract class AbstractImportService implements ImportService {
         final StockQuote youngestStockQuote = importStockQuoteList.get(importStockQuoteList.size() - 1);
 
         final List<StockQuote> removeStockQuoteList =
-                stockQuoteRepository.findByWkn(stock.getWkn(), frequency, youngestStockQuote.getDate(), oldestStockQuote.getDate());
+                stockQuoteRepository.findByWkn(stock.getWkn(), frequency, oldestStockQuote.getDate(), youngestStockQuote.getDate());
 
         transactionalUpdateStockQuotes(removeStockQuoteList, importStockQuoteList);
 

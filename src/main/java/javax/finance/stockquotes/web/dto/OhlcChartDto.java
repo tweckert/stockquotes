@@ -1,6 +1,6 @@
 package javax.finance.stockquotes.web.dto;
 
-import javax.finance.stockquotes.data.entity.Frequency;
+import javax.finance.stockquotes.persistence.entity.Frequency;
 import javax.finance.stockquotes.web.facade.TimeRange;
 import java.io.Serializable;
 import java.math.BigDecimal;

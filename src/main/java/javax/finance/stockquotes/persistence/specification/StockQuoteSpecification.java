@@ -1,9 +1,9 @@
-package javax.finance.stockquotes.data.specification;
+package javax.finance.stockquotes.persistence.specification;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.finance.stockquotes.data.entity.StockQuote;
+import javax.finance.stockquotes.persistence.entity.StockQuote;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;

@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.data.repository;
+package javax.finance.stockquotes.persistence.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.util.Assert;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.finance.stockquotes.data.entity.Stock;
+import javax.finance.stockquotes.persistence.entity.Stock;
 import javax.finance.stockquotes.test.PostgresTestContainer;
 import javax.transaction.Transactional;
 

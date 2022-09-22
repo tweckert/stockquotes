@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import javax.finance.stockquotes.data.entity.StockQuote;
+import javax.finance.stockquotes.persistence.entity.StockQuote;
 import java.math.BigDecimal;
 import java.util.Date;
 

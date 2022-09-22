@@ -11,9 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.finance.stockquotes.config.QuotesConfigurationProperties;
-import javax.finance.stockquotes.data.entity.Frequency;
-import javax.finance.stockquotes.data.entity.Stock;
-import javax.finance.stockquotes.data.repository.StockRepository;
+import javax.finance.stockquotes.persistence.entity.Frequency;
+import javax.finance.stockquotes.persistence.entity.Stock;
+import javax.finance.stockquotes.persistence.repository.StockRepository;
 import javax.finance.stockquotes.service.ImportService;
 import javax.finance.stockquotes.service.ScheduledTask;
 import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
@@ -62,6 +62,10 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
         }
 
         FileUtils.forceMkdir(yahooConfigurationProperties.getWorkDir());
+
+        if (LOG.isInfoEnabled()) {
+            LOG.info(StringUtils.join("Yahoo work directory is set to '", yahooConfigurationProperties.getWorkDir(), "'"));
+        }
     }
 
     @Override

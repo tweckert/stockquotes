@@ -1,7 +1,7 @@
 package javax.finance.stockquotes.service;
 
-import javax.finance.stockquotes.data.entity.Frequency;
-import javax.finance.stockquotes.data.entity.Stock;
+import javax.finance.stockquotes.persistence.entity.Frequency;
+import javax.finance.stockquotes.persistence.entity.Stock;
 import java.io.File;
 
 public interface ImportService {

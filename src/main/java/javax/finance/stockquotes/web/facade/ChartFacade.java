@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
-import javax.finance.stockquotes.data.entity.Frequency;
-import javax.finance.stockquotes.data.entity.StockQuote;
-import javax.finance.stockquotes.data.repository.StockQuoteRepository;
+import javax.finance.stockquotes.persistence.entity.Frequency;
+import javax.finance.stockquotes.persistence.entity.StockQuote;
+import javax.finance.stockquotes.persistence.repository.StockQuoteRepository;
 import javax.finance.stockquotes.web.dto.OhlcChartDto;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -49,8 +49,8 @@ public class ChartFacade {
 
         final List<StockQuote> stockQuotes =
                 stockSymbolIsWkn
-                        ? stockQuoteRepository.findByWkn(stockSymbol, frequency, youngestDate, oldestDate)
-                        : stockQuoteRepository.findByIsin(stockSymbol, frequency, youngestDate, oldestDate);
+                        ? stockQuoteRepository.findByWkn(stockSymbol, frequency, oldestDate, youngestDate)
+                        : stockQuoteRepository.findByIsin(stockSymbol, frequency, oldestDate, youngestDate);
 
         return createChartDto(stockQuotes, frequency, timeRange);
     }

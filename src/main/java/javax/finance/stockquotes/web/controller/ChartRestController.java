@@ -5,7 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.finance.stockquotes.data.entity.Frequency;
+import javax.finance.stockquotes.persistence.entity.Frequency;
 import javax.finance.stockquotes.web.dto.OhlcChartDto;
 import javax.finance.stockquotes.web.facade.ChartFacade;
 import javax.finance.stockquotes.web.facade.TimeRange;

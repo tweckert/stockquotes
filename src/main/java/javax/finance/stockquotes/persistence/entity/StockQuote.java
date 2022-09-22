@@ -1,4 +1,7 @@
-package javax.finance.stockquotes.data.entity;
+package javax.finance.stockquotes.persistence.entity;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -125,6 +128,20 @@ public class StockQuote {
 
     public void setFrequency(final Frequency frequency) {
         this.frequency = frequency;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("id", id)
+                .append("date", date)
+                .append("open", open)
+                .append("close", close)
+                .append("adj_close", adjClose)
+                .append("high", high)
+                .append("low", low)
+                .append("frequency", frequency)
+                .toString();
     }
 
 }

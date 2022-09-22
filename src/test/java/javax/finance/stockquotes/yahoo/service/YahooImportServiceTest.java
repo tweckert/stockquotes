@@ -9,10 +9,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.finance.stockquotes.data.entity.Frequency;
-import javax.finance.stockquotes.data.entity.Stock;
-import javax.finance.stockquotes.data.repository.StockQuoteRepository;
-import javax.finance.stockquotes.data.repository.StockRepository;
+import javax.finance.stockquotes.persistence.entity.Frequency;
+import javax.finance.stockquotes.persistence.entity.Stock;
+import javax.finance.stockquotes.persistence.repository.StockQuoteRepository;
+import javax.finance.stockquotes.persistence.repository.StockRepository;
 import javax.transaction.Transactional;
 import java.io.File;
 

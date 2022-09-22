@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
-import javax.finance.stockquotes.data.entity.Frequency;
-import javax.finance.stockquotes.data.entity.Stock;
-import javax.finance.stockquotes.data.entity.StockQuote;
-import javax.finance.stockquotes.data.repository.StockQuoteRepository;
+import javax.finance.stockquotes.persistence.entity.Frequency;
+import javax.finance.stockquotes.persistence.entity.Stock;
+import javax.finance.stockquotes.persistence.entity.StockQuote;
+import javax.finance.stockquotes.persistence.repository.StockQuoteRepository;
 import javax.finance.stockquotes.service.impl.AbstractImportService;
 import java.io.File;
 import java.io.FileReader;

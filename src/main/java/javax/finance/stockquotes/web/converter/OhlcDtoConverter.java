@@ -3,7 +3,7 @@ package javax.finance.stockquotes.web.converter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import javax.finance.stockquotes.data.entity.StockQuote;
+import javax.finance.stockquotes.persistence.entity.StockQuote;
 import javax.finance.stockquotes.web.dto.OhlcDto;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

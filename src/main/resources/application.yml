@@ -51,7 +51,7 @@ quotes:
       name: iShares NASDAQ 100 UCITS ETF USD (Acc)
   yahoo:
     cron: 0 0/15 * * * ?
-    work-dir: /home/weckert/Downloads/yahoo-finance
+    work-dir: ${user.home}/Downloads/yahoo-finance
     downloads:
       -
         url: https://query1.finance.yahoo.com/v7/finance/download/EUNL.DE?period1={0}&period2={1}&interval=1d&events=history&includeAdjustedClose=true

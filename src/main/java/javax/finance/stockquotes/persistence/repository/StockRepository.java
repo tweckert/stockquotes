@@ -1,9 +1,9 @@
-package javax.finance.stockquotes.data.repository;
+package javax.finance.stockquotes.persistence.repository;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.finance.stockquotes.data.entity.Stock;
+import javax.finance.stockquotes.persistence.entity.Stock;
 import java.util.List;
 
 @Repository

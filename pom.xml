@@ -159,7 +159,7 @@
                 <configuration>
                     <changeLogFile>src/main/resources/liquibase/changelog.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/liquibase/diff-changelog.xml</diffChangeLogFile>
-                    <referenceUrl>hibernate:spring:javax.finance.stockquotes.data.entity?hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;dialect=org.hibernate.dialect.H2Dialect</referenceUrl>
+                    <referenceUrl>hibernate:spring:javax.finance.stockquotes.persistence.entity?hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;dialect=org.hibernate.dialect.H2Dialect</referenceUrl>
                     <driver>org.postgresql.Driver</driver>
                     <url>jdbc:postgresql://localhost:5432/stockquotes</url>
                     <username>postgres</username>
