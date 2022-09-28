@@ -27,14 +27,8 @@ https://developers.google.com/chart/interactive/docs/gallery/linechart
                 async: false
             }).responseText;
 
-            var jsonDataStr = JSON.stringify(eval("(" + jsonData + ")"));
-
-            //console.log(jsonDataStr);
-
             // create our data table out of JSON data loaded from server
-            var data = new google.visualization.DataTable(jsonDataStr);
-            //data.addColumn('date', 'X');
-            //data.addColumn('number', 'A0RPWH');
+            var data = new google.visualization.DataTable(jsonData);
 
             var options = {
                 colors: ["#4184F3"],
