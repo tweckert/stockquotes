@@ -15,3 +15,4 @@ spring:
 quotes:
   yahoo:
     cron: 0 0/5 * * * ?
+    #cron: "-"

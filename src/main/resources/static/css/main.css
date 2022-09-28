@@ -1,0 +1,18 @@
+#chart_div svg g circle {
+    stroke: #4184F3 !important;
+    fill-opacity: 1;
+    r: 5;
+    fill: #4184F3 !important;
+    filter: none !important;
+}
+#chart_div svg g circle:hover {
+    r: 8
+}
+#chart_div svg g path {
+    stroke-width: 4 !important;
+    stroke: #4184F3 !important;
+    stroke-linejoin: bevel;
+    stroke-width: 1;
+    stroke-linecap: round;
+    filter: none !important;
+}

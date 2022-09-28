@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.web.converter;
+package javax.finance.stockquotes.web.converter.ohlc;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package javax.finance.stockquotes.web.converter;
+package javax.finance.stockquotes.web.converter.ohlc;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ChartDtoConverter implements Converter<List<StockQuote>, OhlcChartDto> {
+public class OhlcChartDtoConverter implements Converter<List<StockQuote>, OhlcChartDto> {
 
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100l);
 
-    private final Converter<StockQuote, OhlcDto> quoteConverter;
+    private final Converter<StockQuote, OhlcDto> ohlcDtoConverter;
 
     @Autowired
-    public ChartDtoConverter(final Converter<StockQuote, OhlcDto> quoteConverter) {
-        this.quoteConverter = quoteConverter;
+    public OhlcChartDtoConverter(final Converter<StockQuote, OhlcDto> ohlcDtoConverter) {
+        this.ohlcDtoConverter = ohlcDtoConverter;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ChartDtoConverter implements Converter<List<StockQuote>, OhlcChartD
         final List<OhlcDto> ohlcDtoList = new ArrayList<>();
         for (final StockQuote stockQuote : stockQuotes) {
 
-            final OhlcDto ohlcDto = quoteConverter.convert(stockQuote);
+            final OhlcDto ohlcDto = ohlcDtoConverter.convert(stockQuote);
             if (ohlcDto != null) {
                 ohlcDtoList.add(ohlcDto);
             }
@@ -46,14 +46,15 @@ public class ChartDtoConverter implements Converter<List<StockQuote>, OhlcChartD
             return null;
         }
 
-        final Stock stock = stockQuotes.get(0).getStock();
+        final Stock firstStock = stockQuotes.get(0).getStock();
         final StockQuote latestStockQuote = stockQuotes.get(stockQuotes.size() - 1);
         final StockQuote oldestStockQuote = stockQuotes.get(0);
         final BigDecimal performance =
                 calculatePerformance(latestStockQuote.getAdjClose(), oldestStockQuote.getAdjClose());
 
         final OhlcChartDto ohlcChartDto =
-                new OhlcChartDto(stock.getWkn(), stock.getIsin(), stock.getName(), performance, null, null, ohlcDtoList);
+                new OhlcChartDto(firstStock.getWkn(), firstStock.getIsin(), firstStock.getName(),
+                        performance, null, null, ohlcDtoList);
 
         return ohlcChartDto;
     }

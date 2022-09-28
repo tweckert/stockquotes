@@ -9,15 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
 import javax.finance.stockquotes.service.DownloadService;
 import javax.finance.stockquotes.service.ScheduledTask;
+import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
 import java.io.File;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 
 @Service
 public class YahooDownloadScheduledTask implements ScheduledTask, InitializingBean {

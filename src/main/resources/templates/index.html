@@ -1,6 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!--/*-->
+https://stackoverflow.com/questions/35143628/google-like-stock-chart-line-chart
+https://developers.google.com/chart/interactive/docs/gallery/linechart
+<!--*/-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+        // load the Visualization API
+        google.charts.load('current', {packages: ['line']});
+
+        // set a callback to run when the Google Visualization API is loaded
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var jsonData = $.ajax({
+                url: "/api/v1/datatable/wkn/A0RPWH",
+                dataType: "json",
+                async: false
+            }).responseText;
+
+            var jsonDataStr = JSON.stringify(eval("(" + jsonData + ")"));
+
+            //console.log(jsonDataStr);
+
+            // create our data table out of JSON data loaded from server
+            var data = new google.visualization.DataTable(jsonDataStr);
+            //data.addColumn('date', 'X');
+            //data.addColumn('number', 'A0RPWH');
+
+            var options = {
+                colors: ["#4184F3"],
+                lineWidth: 3,
+                legend: {
+                    position: "none"
+                },
+                hAxis: {
+                    pointSize: 2,
+                    format: 'MMM d',
+                    title: 'Date',
+                    titlePosition: 'none'
+                },
+                vAxis: {
+                    format: '$###,###,###.00',
+                    title: 'Dollar'
+                }
+            };
+
+            // instantiate and draw our chart, passing in some options
+            var chart = new google.charts.Line(document.getElementById('chart_div'));
+            chart.draw(data, google.charts.Line.convertOptions(options));
+        }
+    </script>
+</head>
 <body>
-Hello, world!
+
+<div id="chart_div" style="width: 900px; height: 300px"></div>
+
 </body>
 </html>
