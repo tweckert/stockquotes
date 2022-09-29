@@ -13,7 +13,7 @@ import javax.finance.stockquotes.web.dto.OhlcChartDto;
 import javax.finance.stockquotes.web.facade.ChartFacade;
 
 @RestController
-@RequestMapping(WebConstants.PATH_PREFIX_API_V1)
+@RequestMapping(WebConstants.API_PATH_PREFIX_V1)
 public class ApiV1Controller extends AbstractController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiV1Controller.class);
@@ -24,7 +24,7 @@ public class ApiV1Controller extends AbstractController {
         super(ohlcChartFacade, dataTableChartFacade);
     }
 
-    @RequestMapping(value = WebConstants.PATH_OHLC_API + "/{stockSymbol}",
+    @RequestMapping(value = WebConstants.API_PATH_OHLC + "/{stockSymbol}",
             method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity ohlcByWkn(@PathVariable(required = true) final String stockSymbol,
                                     @RequestParam(name = "range", required = false) final String timeRangeName,
@@ -47,7 +47,7 @@ public class ApiV1Controller extends AbstractController {
         }
     }
 
-    @RequestMapping(value = WebConstants.PATH_DATATABLE_API + "/{stockSymbol}",
+    @RequestMapping(value = WebConstants.API_PATH_DATATABLE + "/{stockSymbol}",
             method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity dataTableByWkn(@PathVariable(required = true) final String stockSymbol,
                                          @RequestParam(name = "range", required = false) final String timeRangeName,

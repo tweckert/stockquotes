@@ -55,7 +55,7 @@ public class TemplateV1Controller extends AbstractController {
 
                 final TimeRange timeRange = TimeRange.of(timeRangeName);
                 final Frequency frequency = getFrequency(timeRange, frequencyName);
-                final String jsonDataUrl = StringUtils.join(WebConstants.PATH_PREFIX_API_V1, WebConstants.PATH_DATATABLE_API,
+                final String jsonDataUrl = StringUtils.join(WebConstants.API_PATH_PREFIX_V1, WebConstants.API_PATH_DATATABLE,
                         "/", stockSymbol.trim(), "?range=", timeRange.toString(), WebConstants.UTF_CODE_AMPERSAND,
                         "frequency=", frequency);
 
