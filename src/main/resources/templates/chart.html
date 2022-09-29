@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--/*-->
-https://stackoverflow.com/questions/35143628/google-like-stock-chart-line-chart
-https://developers.google.com/chart/interactive/docs/gallery/linechart
-<!--*/-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
@@ -22,7 +18,7 @@ https://developers.google.com/chart/interactive/docs/gallery/linechart
         function drawChart() {
 
             var jsonData = $.ajax({
-                url: "/api/v1/datatable/wkn/A0RPWH",
+                url: "[[${jsonDataUrl}]]",
                 dataType: "json",
                 async: false
             }).responseText;
@@ -52,11 +48,16 @@ https://developers.google.com/chart/interactive/docs/gallery/linechart
             var chart = new google.charts.Line(document.getElementById('chart_div'));
             chart.draw(data, google.charts.Line.convertOptions(options));
         }
+
     </script>
 </head>
 <body>
 
+<h1 th:text="${stockName}"></h1>
+<div>WKN: [[${wkn}]] | ISIN: [[${isin}]]</div>
+<br/>
 <div id="chart_div" style="width: 900px; height: 300px"></div>
+<span>Chart shows the adjusted close price that is adjusted for splits and dividend and/or capital gain distributions.</span>
 
 </body>
 </html>

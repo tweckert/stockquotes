@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.finance.stockquotes.persistence.entity.Frequency;
 import javax.finance.stockquotes.persistence.entity.StockQuote;
 import javax.finance.stockquotes.persistence.repository.StockQuoteRepository;
+import javax.finance.stockquotes.service.StockService;
 import javax.finance.stockquotes.web.facade.ChartFacade;
 import javax.finance.stockquotes.web.facade.TimeRange;
 import java.util.List;
@@ -20,25 +21,16 @@ public class DataTableChartFacade extends AbstractChartFacade implements ChartFa
 
     @Autowired
     public DataTableChartFacade(final StockQuoteRepository stockQuoteRepository,
+                                final StockService stockService,
                                 final Converter<List<StockQuote>, DataTable> dataTableConverter) {
-        super(stockQuoteRepository);
+        super(stockQuoteRepository, stockService);
         this.dataTableConverter = dataTableConverter;
     }
 
     @Override
-    public DataTable getByWkn(final String wkn, final TimeRange timeRange, final Frequency frequency) {
-        return getBySymbol(true, wkn, timeRange, frequency);
-    }
+    public DataTable selectStockQuoteData(final String stockSymbol, final TimeRange timeRange, final Frequency frequency) {
 
-    @Override
-    public DataTable getByIsin(final String isin, final TimeRange timeRange, final Frequency frequency) {
-        return getBySymbol(false, isin, timeRange, frequency);
-    }
-
-    protected DataTable getBySymbol(final boolean stockSymbolIsWkn, final String stockSymbol,
-                                    final TimeRange timeRange, final Frequency frequency) {
-
-        final List<StockQuote> stockQuotes = selectStockQuotes(stockSymbolIsWkn, stockSymbol, timeRange, frequency);
+        final List<StockQuote> stockQuotes = selectStockQuotes(stockSymbol, timeRange, frequency);
         final DataTable dataTable = createDataTable(stockQuotes, frequency, timeRange);
 
         return dataTable;

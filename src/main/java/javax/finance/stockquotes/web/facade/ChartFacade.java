@@ -4,8 +4,6 @@ import javax.finance.stockquotes.persistence.entity.Frequency;
 
 public interface ChartFacade<DTO> {
 
-    DTO getByWkn(final String wkn, final TimeRange timeRange, final Frequency frequency);
-
-    DTO getByIsin(final String isin, final TimeRange timeRange, final Frequency frequency);
+    DTO selectStockQuoteData(final String stockSymbol, final TimeRange timeRange, final Frequency frequency);
 
 }

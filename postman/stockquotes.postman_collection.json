@@ -27,7 +27,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/wkn/{{wkn}}",
+							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/{{wkn}}",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -36,7 +36,6 @@
 								"api",
 								"v1",
 								"ohlc",
-								"wkn",
 								"{{wkn}}"
 							]
 						}
@@ -62,7 +61,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/wkn/{{wkn}}?range={{range}}&frequency={{frequency}}",
+							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/{{wkn}}?range={{range}}&frequency={{frequency}}",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -71,7 +70,6 @@
 								"api",
 								"v1",
 								"ohlc",
-								"wkn",
 								"{{wkn}}"
 							],
 							"query": [
@@ -107,7 +105,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/isin/{{isin}}",
+							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/{{isin}}",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -116,7 +114,6 @@
 								"api",
 								"v1",
 								"ohlc",
-								"isin",
 								"{{isin}}"
 							]
 						}
@@ -142,7 +139,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/isin/{{isin}}?range={{range}}&frequency={{frequency}}",
+							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/{{isin}}?range={{range}}&frequency={{frequency}}",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -151,7 +148,6 @@
 								"api",
 								"v1",
 								"ohlc",
-								"isin",
 								"{{isin}}"
 							],
 							"query": [
@@ -192,7 +188,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/datatable/wkn/{{wkn}}",
+							"raw": "{{protocol}}://{{host}}/api/v1/datatable/{{wkn}}",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -201,7 +197,6 @@
 								"api",
 								"v1",
 								"datatable",
-								"wkn",
 								"{{wkn}}"
 							]
 						}
@@ -227,7 +222,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/datatable/isin/{{isin}}",
+							"raw": "{{protocol}}://{{host}}/api/v1/datatable/{{isin}}",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -236,7 +231,6 @@
 								"api",
 								"v1",
 								"datatable",
-								"isin",
 								"{{isin}}"
 							]
 						}

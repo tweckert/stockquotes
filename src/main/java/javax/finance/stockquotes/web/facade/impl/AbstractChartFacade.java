@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.finance.stockquotes.persistence.entity.Frequency;
 import javax.finance.stockquotes.persistence.entity.StockQuote;
 import javax.finance.stockquotes.persistence.repository.StockQuoteRepository;
+import javax.finance.stockquotes.service.StockService;
 import javax.finance.stockquotes.web.facade.TimeRange;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -14,12 +15,15 @@ import java.util.List;
 public abstract class AbstractChartFacade {
 
     private final StockQuoteRepository stockQuoteRepository;
+    private final StockService stockService;
 
-    protected AbstractChartFacade(final StockQuoteRepository stockQuoteRepository) {
+    protected AbstractChartFacade(final StockQuoteRepository stockQuoteRepository,
+                                  final StockService stockService) {
         this.stockQuoteRepository = stockQuoteRepository;
+        this.stockService = stockService;
     }
 
-    protected List<StockQuote> selectStockQuotes(final boolean stockSymbolIsWkn, final String stockSymbol,
+    protected List<StockQuote> selectStockQuotes(final String stockSymbol,
                                                  final TimeRange timeRange, final Frequency frequency) {
 
         if (StringUtils.isBlank(stockSymbol) || timeRange == null || frequency == null) {
@@ -29,10 +33,11 @@ public abstract class AbstractChartFacade {
         final LocalDateTime startTime = LocalDateTime.now();
         final Date youngestDate = Date.from(startTime.atZone(ZoneId.systemDefault()).toInstant());
         final Date oldestDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
+        final boolean isIsinStockSymbol = stockService.isValidIsin(stockSymbol);
 
-        return stockSymbolIsWkn
-                ? stockQuoteRepository.findByWkn(stockSymbol, frequency, oldestDate, youngestDate)
-                : stockQuoteRepository.findByIsin(stockSymbol, frequency, oldestDate, youngestDate);
+        return isIsinStockSymbol
+                ? stockQuoteRepository.findByIsin(stockSymbol, frequency, oldestDate, youngestDate)
+                : stockQuoteRepository.findByWkn(stockSymbol, frequency, oldestDate, youngestDate);
     }
 
     protected LocalDateTime calculateEndTime(final LocalDateTime startTime, final TimeRange timeRange) {

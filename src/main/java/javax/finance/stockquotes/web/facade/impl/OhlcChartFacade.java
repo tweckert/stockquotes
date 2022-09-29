@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.finance.stockquotes.persistence.entity.Frequency;
 import javax.finance.stockquotes.persistence.entity.StockQuote;
 import javax.finance.stockquotes.persistence.repository.StockQuoteRepository;
+import javax.finance.stockquotes.service.StockService;
 import javax.finance.stockquotes.web.dto.OhlcChartDto;
 import javax.finance.stockquotes.web.facade.ChartFacade;
 import javax.finance.stockquotes.web.facade.TimeRange;
@@ -20,25 +21,16 @@ public class OhlcChartFacade extends AbstractChartFacade implements ChartFacade<
 
     @Autowired
     public OhlcChartFacade(final StockQuoteRepository stockQuoteRepository,
+                           final StockService stockService,
                            final Converter<List<StockQuote>, OhlcChartDto> chartDtoConverter) {
-        super(stockQuoteRepository);
+        super(stockQuoteRepository, stockService);
         this.chartDtoConverter = chartDtoConverter;
     }
 
     @Override
-    public OhlcChartDto getByWkn(final String wkn, final TimeRange timeRange, final Frequency frequency) {
-        return getBySymbol(true, wkn, timeRange, frequency);
-    }
+    public OhlcChartDto selectStockQuoteData(final String stockSymbol, final TimeRange timeRange, final Frequency frequency) {
 
-    @Override
-    public OhlcChartDto getByIsin(final String isin, final TimeRange timeRange, final Frequency frequency) {
-        return getBySymbol(false, isin, timeRange, frequency);
-    }
-
-    protected OhlcChartDto getBySymbol(final boolean stockSymbolIsWkn, final String stockSymbol,
-                                       final TimeRange timeRange, final Frequency frequency) {
-
-        final List<StockQuote> stockQuotes = selectStockQuotes(stockSymbolIsWkn, stockSymbol, timeRange, frequency);
+        final List<StockQuote> stockQuotes = selectStockQuotes(stockSymbol, timeRange, frequency);
         final OhlcChartDto ohlcChartDto = createChartDto(stockQuotes, frequency, timeRange);
 
         return ohlcChartDto;
