@@ -9,7 +9,7 @@
 
     <script type="text/javascript">
 
-        google.charts.load('current', {packages: ['line']});
+        google.charts.load('current', {packages: ['line'], language: '[[${locale}]]'});
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
@@ -55,7 +55,7 @@
 <br/>
 <div id="chart_div" style="width: 900px; height: 300px"></div>
 <br/>
-<div>Adjusted close price is adjusted for splits and dividend and/or capital gain distributions.</div>
+<div th:text="#{text.adj_close}"></div>
 
 </body>
 </html>

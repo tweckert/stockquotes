@@ -3,6 +3,7 @@ package javax.finance.stockquotes.web.controller;
 import com.google.visualization.datasource.datatable.DataTable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,7 @@ public class TemplateController extends AbstractController {
         modelAndView.addObject("stockName", stock.getName());
         modelAndView.addObject("isin", stock.getIsin());
         modelAndView.addObject("wkn", stock.getWkn());
+        modelAndView.addObject("locale", LocaleContextHolder.getLocale().toString());
         modelAndView.setViewName("/chart.html");
 
         return modelAndView;

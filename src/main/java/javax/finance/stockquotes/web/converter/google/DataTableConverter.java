@@ -60,7 +60,7 @@ public class DataTableConverter implements Converter<List<StockQuote>, DataTable
         final Locale locale = LocaleContextHolder.getLocale();
 
         final String columnLabelDate = "X";
-        final String columnLabelAdjClose = messageSource.getMessage("datatable.column.label.adj_close", null, locale);
+        final String columnLabelAdjClose = messageSource.getMessage("datatable.column.adj_close.label", null, locale);
 
         final List<ColumnDescription> columnDescriptionList = new ArrayList<>();
         columnDescriptionList.add(new ColumnDescription("date", ValueType.DATE, columnLabelDate));
