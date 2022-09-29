@@ -1,6 +1,8 @@
 package javax.finance.stockquotes.web.controller;
 
 import com.google.visualization.datasource.datatable.DataTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import javax.finance.stockquotes.web.facade.ChartFacade;
 @RequestMapping(WebConstants.PATH_PREFIX_API_V1)
 public class ApiV1Controller extends AbstractController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ApiV1Controller.class);
+
     @Autowired
     public ApiV1Controller(final ChartFacade<OhlcChartDto> ohlcChartFacade,
                            final ChartFacade<DataTable> dataTableChartFacade) {
@@ -22,18 +26,48 @@ public class ApiV1Controller extends AbstractController {
 
     @RequestMapping(value = WebConstants.PATH_OHLC_API + "/{stockSymbol}",
             method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OhlcChartDto> ohlcByWkn(@PathVariable(required = true) final String stockSymbol,
-                                                  @RequestParam(name = "range", required = false) final String timeRangeName,
-                                                  @RequestParam(name = "frequency", required = false) final String frequencyName) {
-        return ohlcChartDtoResponse(stockSymbol, timeRangeName, frequencyName);
+    public ResponseEntity ohlcByWkn(@PathVariable(required = true) final String stockSymbol,
+                                    @RequestParam(name = "range", required = false) final String timeRangeName,
+                                    @RequestParam(name = "frequency", required = false) final String frequencyName) {
+
+        try {
+
+            final OhlcChartDto ohlcChartDto = getOhlcChartDto(stockSymbol, timeRangeName, frequencyName);
+
+            return ohlcChartDto != null
+                    ? ResponseEntity.ok(ohlcChartDto)
+                    : notFoundResponseEntity(stockSymbol, timeRangeName, frequencyName);
+        } catch (final Exception e) {
+
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
+
+            return errorResponseEntity(e, stockSymbol, timeRangeName, frequencyName);
+        }
     }
 
     @RequestMapping(value = WebConstants.PATH_DATATABLE_API + "/{stockSymbol}",
             method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String dataTableByWkn(@PathVariable(required = true) final String stockSymbol,
-                                 @RequestParam(name = "range", required = false) final String timeRangeName,
-                                 @RequestParam(name = "frequency", required = false) final String frequencyName) {
-        return dataTableResponse(stockSymbol, timeRangeName, frequencyName);
+    public ResponseEntity dataTableByWkn(@PathVariable(required = true) final String stockSymbol,
+                                         @RequestParam(name = "range", required = false) final String timeRangeName,
+                                         @RequestParam(name = "frequency", required = false) final String frequencyName) {
+
+        try {
+
+            final DataTable dataTable = dataTableResponse(stockSymbol, timeRangeName, frequencyName);
+
+            return dataTable != null
+                    ? ResponseEntity.ok(dataTable)
+                    : notFoundResponseEntity(stockSymbol, timeRangeName, frequencyName);
+        } catch (final Exception e) {
+
+            if (LOG.isErrorEnabled()) {
+                LOG.error(e.getMessage(), e);
+            }
+
+            return errorResponseEntity(e, stockSymbol, timeRangeName, frequencyName);
+        }
     }
 
 }

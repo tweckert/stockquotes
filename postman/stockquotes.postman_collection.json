@@ -121,6 +121,40 @@
 					"response": []
 				},
 				{
+					"name": "get OHLC by ISIN (non-existing)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {",
+									"  pm.expect(pm.response.code).to.eql(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/ohlc/{{isin}}xxx",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ohlc",
+								"{{isin}}xxx"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "get OHLC by ISIN with time range and frequency",
 					"event": [
 						{
@@ -236,6 +270,40 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "get DataTable by ISIN (non-existing)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", () => {",
+									"  pm.expect(pm.response.code).to.eql(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/datatable/{{isin}}1",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"datatable",
+								"{{isin}}1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -255,9 +323,7 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.test(\"Status code is 200\", () => {",
-					"  pm.expect(pm.response.code).to.eql(200);",
-					"});"
+					""
 				]
 			}
 		}

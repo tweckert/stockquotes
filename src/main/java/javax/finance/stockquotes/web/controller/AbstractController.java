@@ -1,22 +1,19 @@
 package javax.finance.stockquotes.web.controller;
 
 import com.google.visualization.datasource.datatable.DataTable;
-import com.google.visualization.datasource.render.JsonRenderer;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.finance.stockquotes.persistence.entity.Frequency;
+import javax.finance.stockquotes.web.dto.ApiErrorDto;
 import javax.finance.stockquotes.web.dto.OhlcChartDto;
 import javax.finance.stockquotes.web.facade.ChartFacade;
 import javax.finance.stockquotes.web.facade.TimeRange;
+import java.util.Collections;
+import java.util.Date;
 
 public abstract class AbstractController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractController.class);
 
     private final ChartFacade<OhlcChartDto> ohlcChartFacade;
     private final ChartFacade<DataTable> dataTableChartFacade;
@@ -27,50 +24,20 @@ public abstract class AbstractController {
         this.dataTableChartFacade = dataTableChartFacade;
     }
 
-    protected ResponseEntity<OhlcChartDto> ohlcChartDtoResponse(final String stockSymbol, final String timeRangeName, final String frequencyName) {
+    protected OhlcChartDto getOhlcChartDto(final String stockSymbol, final String timeRangeName, final String frequencyName) {
 
-        try {
+        final TimeRange timeRange = TimeRange.of(timeRangeName);
+        final Frequency frequency = getFrequency(timeRange, frequencyName);
 
-            final TimeRange timeRange = TimeRange.of(timeRangeName);
-            final Frequency frequency = getFrequency(timeRange, frequencyName);
-            final OhlcChartDto ohlcChartDto = ohlcChartFacade.selectStockQuoteData(stockSymbol, timeRange, frequency);
-
-            return ohlcChartDto != null
-                    ? ResponseEntity.ok(ohlcChartDto)
-                    : ResponseEntity.notFound().build();
-        } catch (final Exception e) {
-
-            if (LOG.isErrorEnabled()) {
-                LOG.error(StringUtils.join("Error selecting OHLC data for symbol '", stockSymbol,
-                        "', time range '", timeRangeName, "' and frequency '", frequencyName, "': ", e.getMessage()), e);
-            }
-
-            return ResponseEntity.internalServerError().build();
-        }
+        return ohlcChartFacade.selectStockQuoteData(stockSymbol, timeRange, frequency);
     }
 
-    protected String dataTableResponse(final String stockSymbol, final String timeRangeName, final String frequencyName) {
+    protected DataTable dataTableResponse(final String stockSymbol, final String timeRangeName, final String frequencyName) {
 
-        try {
+        final TimeRange timeRange = TimeRange.of(timeRangeName);
+        final Frequency frequency = getFrequency(timeRange, frequencyName);
 
-            final TimeRange timeRange = TimeRange.of(timeRangeName);
-            final Frequency frequency = getFrequency(timeRange, frequencyName);
-            final DataTable dataTable = dataTableChartFacade.selectStockQuoteData(stockSymbol, timeRange, frequency);
-
-            if (dataTable == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-
-            return JsonRenderer.renderDataTable(dataTable, true, false, false).toString();
-        } catch (final Exception e) {
-
-            if (LOG.isErrorEnabled()) {
-                LOG.error(StringUtils.join("Error selecting OHLC data for symbol '", stockSymbol,
-                        "', time range '", timeRangeName, "' and frequency '", frequencyName, "': ", e.getMessage()), e);
-            }
-
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return dataTableChartFacade.selectStockQuoteData(stockSymbol, timeRange, frequency);
     }
 
     protected Frequency getFrequency(final TimeRange timeRange, final String frequencyName) {
@@ -78,5 +45,35 @@ public abstract class AbstractController {
                 ? Frequency.DAILY
                 : Frequency.of(frequencyName);
     }
+
+    protected ResponseEntity notFoundResponseEntity(final String stockSymbol,
+                                                    final String timeRangeName,
+                                                    final String frequencyName) {
+
+        final ApiErrorDto apiErrorDto = new ApiErrorDto(HttpStatus.NOT_FOUND, new Date(),
+                StringUtils.join("No data found for stock symbol '", String.valueOf(stockSymbol), "'",
+                        "', time range '", String.valueOf(timeRangeName),
+                        "' and frequency '", String.valueOf(frequencyName), "'"),
+                StringUtils.EMPTY, Collections.emptyList());
+
+        return new ResponseEntity(apiErrorDto, HttpStatus.NOT_FOUND);
+    }
+
+    protected ResponseEntity errorResponseEntity(final Throwable cause,
+                                                 final String stockSymbol,
+                                                 final String timeRangeName,
+                                                 final String frequencyName) {
+
+        final String debugMessage = cause != null ? cause.getMessage() : null;
+
+        final ApiErrorDto apiErrorDto = new ApiErrorDto(HttpStatus.INTERNAL_SERVER_ERROR, new Date(),
+                StringUtils.join("Error getting data for stock symbol '", String.valueOf(stockSymbol), "'",
+                        "', time range '", String.valueOf(timeRangeName),
+                        "' and frequency '", String.valueOf(frequencyName), "'"),
+                debugMessage, Collections.emptyList());
+
+        return new ResponseEntity(apiErrorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
 }

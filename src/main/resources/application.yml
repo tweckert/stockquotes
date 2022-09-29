@@ -29,6 +29,11 @@ spring:
     encoding: UTF-8
     fallback-to-system-locale: false
 
+server:
+  error:
+    whitelabel:
+      enabled: false
+
 #
 # files are mapped to imports by filename
 # imports are mapped to stocks by WKN
