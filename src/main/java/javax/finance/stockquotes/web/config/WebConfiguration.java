@@ -18,8 +18,10 @@ public class WebConfiguration {
 
     @Bean
     public LocaleResolver localeResolver() {
+
         final AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
         acceptHeaderLocaleResolver.setDefaultLocale(StockQuotesApplicationConstants.DEFAULT_LOCALE);
+
         return acceptHeaderLocaleResolver;
     }
 

@@ -22,21 +22,21 @@ import javax.finance.stockquotes.web.facade.ChartFacade;
 import javax.finance.stockquotes.web.facade.TimeRange;
 
 @Controller
-public class TemplateController extends AbstractController {
+public class TemplateV1Controller extends AbstractController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TemplateController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TemplateV1Controller.class);
 
     private final StockService stockService;
 
     @Autowired
-    public TemplateController(final StockService stockService,
-                              final ChartFacade<OhlcChartDto> ohlcChartFacade,
-                              final ChartFacade<DataTable> dataTableChartFacade) {
+    public TemplateV1Controller(final StockService stockService,
+                                final ChartFacade<OhlcChartDto> ohlcChartFacade,
+                                final ChartFacade<DataTable> dataTableChartFacade) {
         super(ohlcChartFacade, dataTableChartFacade);
         this.stockService = stockService;
     }
 
-    @GetMapping(value = "/chart/{stockSymbol}")
+    @GetMapping(value = "/chart/v1/{stockSymbol}")
     public ModelAndView chart(@PathVariable(required = true) final String stockSymbol,
                               @RequestParam(name = "range", required = false) final String timeRangeName,
                               @RequestParam(name = "frequency", required = false) final String frequencyName) {
@@ -49,7 +49,7 @@ public class TemplateController extends AbstractController {
             if (stock == null) {
 
                 modelAndView.addObject("stockSymbol", String.valueOf(stockSymbol));
-                modelAndView.setViewName("/notfound.html");
+                modelAndView.setViewName("/v1/notfound.html");
                 modelAndView.setStatus(HttpStatus.NOT_FOUND);
             } else {
 
@@ -64,7 +64,7 @@ public class TemplateController extends AbstractController {
                 modelAndView.addObject("isin", stock.getIsin());
                 modelAndView.addObject("wkn", stock.getWkn());
                 modelAndView.addObject("locale", LocaleContextHolder.getLocale().toString());
-                modelAndView.setViewName("/chart.html");
+                modelAndView.setViewName("/v1/chart.html");
                 modelAndView.setStatus(HttpStatus.OK);
             }
         } catch (final Exception e) {
