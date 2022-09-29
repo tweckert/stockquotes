@@ -24,6 +24,10 @@ spring:
   thymeleaf:
     prefix: file:src/main/resources/templates/
     cache: true
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
 
 #
 # files are mapped to imports by filename

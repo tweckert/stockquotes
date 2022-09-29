@@ -9,13 +9,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import javax.finance.stockquotes.persistence.entity.StockQuote;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Locale;
 
 /**
  * See: {@link https://developers.google.com/chart/interactive/docs/reference}
@@ -26,10 +28,13 @@ public class DataTableConverter implements Converter<List<StockQuote>, DataTable
     private static final Logger LOG = LoggerFactory.getLogger(DataTableConverter.class);
 
     private final Converter<StockQuote, TableRow> tableRowConverter;
+    private final MessageSource messageSource;
 
     @Autowired
-    public DataTableConverter(final Converter<StockQuote, TableRow> tableRowConverter) {
+    public DataTableConverter(final Converter<StockQuote, TableRow> tableRowConverter,
+                              final MessageSource messageSource) {
         this.tableRowConverter = tableRowConverter;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -52,9 +57,14 @@ public class DataTableConverter implements Converter<List<StockQuote>, DataTable
             return null;
         }
 
+        final Locale locale = LocaleContextHolder.getLocale();
+
+        final String columnLabelDate = "X";
+        final String columnLabelAdjClose = messageSource.getMessage("datatable.column.label.adj_close", null, locale);
+
         final List<ColumnDescription> columnDescriptionList = new ArrayList<>();
-        columnDescriptionList.add(new ColumnDescription(UUID.randomUUID().toString(), ValueType.DATE, "X"));
-        columnDescriptionList.add(new ColumnDescription(UUID.randomUUID().toString(), ValueType.NUMBER, "Adj. Close"));
+        columnDescriptionList.add(new ColumnDescription("date", ValueType.DATE, columnLabelDate));
+        columnDescriptionList.add(new ColumnDescription("adj_close", ValueType.NUMBER, columnLabelAdjClose));
 
         final DataTable dataTable = new DataTable();
         dataTable.addColumns(columnDescriptionList);

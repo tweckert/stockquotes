@@ -13,7 +13,7 @@ public class OhlcDto implements Serializable {
 
     private final Long timestampSecs;
 
-    @JsonFormat(pattern = StockQuotesApplicationConstants.ISO8601_DATE_FORMAT, timezone = StockQuotesApplicationConstants.TIMEZONE_UTC)
+    @JsonFormat(pattern = StockQuotesApplicationConstants.ISO8601_DATE_FORMAT, timezone = StockQuotesApplicationConstants.DEFAULT_TIMEZONE_ID)
     private Date date;
 
     private BigDecimal open;

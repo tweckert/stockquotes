@@ -20,6 +20,8 @@
                 async: false
             }).responseText;
 
+            //console.log(JSON.stringify(eval("(" + jsonData + ")")));
+
             var data = new google.visualization.DataTable(jsonData);
 
             var options = {

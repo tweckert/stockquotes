@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import javax.finance.stockquotes.constant.StockQuotesApplicationConstants;
+import java.util.Locale;
 import java.util.TimeZone;
 
 @SpringBootApplication
@@ -19,7 +20,8 @@ public class StockQuotesApplication {
     @PostConstruct
     public void init() {
         // set the entire app in UTC timezone (e.g. so that Hibernate will store dates in UTC)
-        TimeZone.setDefault(TimeZone.getTimeZone(StockQuotesApplicationConstants.TIMEZONE_UTC));
+        TimeZone.setDefault(StockQuotesApplicationConstants.DEFAULT_TIMEZONE);
+        Locale.setDefault(StockQuotesApplicationConstants.DEFAULT_LOCALE);
     }
 
 }
