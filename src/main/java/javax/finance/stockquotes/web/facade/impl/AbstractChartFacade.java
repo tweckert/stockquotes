@@ -33,9 +33,9 @@ public abstract class AbstractChartFacade {
         final LocalDateTime startTime = LocalDateTime.now();
         final Date youngestDate = Date.from(startTime.atZone(ZoneId.systemDefault()).toInstant());
         final Date oldestDate = Date.from(calculateEndTime(startTime, timeRange).atZone(ZoneId.systemDefault()).toInstant());
-        final boolean isIsinStockSymbol = stockService.isValidIsin(stockSymbol);
+        final boolean isValidIsinStockSymbol = stockService.isValidIsin(stockSymbol);
 
-        return isIsinStockSymbol
+        return isValidIsinStockSymbol
                 ? stockQuoteRepository.findByIsin(stockSymbol, frequency, oldestDate, youngestDate)
                 : stockQuoteRepository.findByWkn(stockSymbol, frequency, oldestDate, youngestDate);
     }

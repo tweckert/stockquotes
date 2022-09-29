@@ -9,10 +9,7 @@
 
     <script type="text/javascript">
 
-        // load the Visualization API
         google.charts.load('current', {packages: ['line']});
-
-        // set a callback to run when the Google Visualization API is loaded
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
@@ -23,7 +20,6 @@
                 async: false
             }).responseText;
 
-            // create our data table out of JSON data loaded from server
             var data = new google.visualization.DataTable(jsonData);
 
             var options = {
@@ -34,7 +30,7 @@
                 },
                 hAxis: {
                     pointSize: 2,
-                    format: 'MMM d',
+                    format: 'MMM d, yyyy',
                     title: 'Date',
                     titlePosition: 'none'
                 },
@@ -44,7 +40,6 @@
                 }
             };
 
-            // instantiate and draw our chart, passing in some options
             var chart = new google.charts.Line(document.getElementById('chart_div'));
             chart.draw(data, google.charts.Line.convertOptions(options));
         }
@@ -57,7 +52,8 @@
 <div>WKN: [[${wkn}]] | ISIN: [[${isin}]]</div>
 <br/>
 <div id="chart_div" style="width: 900px; height: 300px"></div>
-<span>Chart shows the adjusted close price that is adjusted for splits and dividend and/or capital gain distributions.</span>
+<br/>
+<div>Adjusted close price is adjusted for splits and dividend and/or capital gain distributions.</div>
 
 </body>
 </html>

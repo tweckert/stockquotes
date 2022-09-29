@@ -38,8 +38,9 @@ public class TemplateController extends AbstractController {
         final Stock stock = stockService.findStock(stockSymbol);
         final TimeRange timeRange = TimeRange.of(timeRangeName);
         final Frequency frequency = getFrequency(timeRange, frequencyName);
-        final String jsonDataUrl = StringUtils.join("/api/v1/datatable/", stockSymbol.trim(),
-                "?range=", timeRange.toString(), WebConstants.UTF_CODE_AMPERSAND, "frequency=", frequency);
+        final String jsonDataUrl = StringUtils.join(WebConstants.PATH_PREFIX_API_V1, WebConstants.PATH_DATATABLE_API,
+                "/", stockSymbol.trim(), "?range=", timeRange.toString(), WebConstants.UTF_CODE_AMPERSAND,
+                "frequency=", frequency);
 
         final ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("jsonDataUrl", jsonDataUrl);
