@@ -20,7 +20,7 @@ import java.io.File;
 @ActiveProfiles("test")
 @Testcontainers
 @Transactional
-public class YahooImportServiceTest {
+public class YahooImportServiceTests {
 
     @Autowired
     private StockRepository stockRepository;
