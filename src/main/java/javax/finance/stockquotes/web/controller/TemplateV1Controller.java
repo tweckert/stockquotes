@@ -49,7 +49,7 @@ public class TemplateV1Controller extends AbstractController {
             if (stock == null) {
 
                 modelAndView.addObject("stockSymbol", String.valueOf(stockSymbol));
-                modelAndView.setViewName("/v1/notfound.html");
+                modelAndView.setViewName("/v1/notfound");
                 modelAndView.setStatus(HttpStatus.NOT_FOUND);
             } else {
 
@@ -64,7 +64,7 @@ public class TemplateV1Controller extends AbstractController {
                 modelAndView.addObject("isin", stock.getIsin());
                 modelAndView.addObject("wkn", stock.getWkn());
                 modelAndView.addObject("locale", LocaleContextHolder.getLocale().toString());
-                modelAndView.setViewName("/v1/chart.html");
+                modelAndView.setViewName("/v1/chart");
                 modelAndView.setStatus(HttpStatus.OK);
             }
         } catch (final Exception e) {

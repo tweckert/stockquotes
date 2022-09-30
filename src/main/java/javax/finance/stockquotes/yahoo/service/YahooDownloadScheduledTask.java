@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.finance.stockquotes.constant.StockQuotesApplicationConstants;
 import javax.finance.stockquotes.service.DownloadService;
 import javax.finance.stockquotes.service.ScheduledTask;
 import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
@@ -39,7 +40,7 @@ public class YahooDownloadScheduledTask implements ScheduledTask, InitializingBe
         FileUtils.createParentDirectories(yahooConfigurationProperties.getWorkDir());
     }
 
-    @Scheduled(cron = "${quotes.yahoo.cron}")
+    @Scheduled(cron = "${quotes.yahoo.cron}", zone = StockQuotesApplicationConstants.DEFAULT_TIMEZONE_ID)
     @Override
     public void execute() {
 

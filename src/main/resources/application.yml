@@ -22,8 +22,9 @@ spring:
   main:
     banner-mode: off
   thymeleaf:
-    prefix: file:src/main/resources/templates/
     cache: true
+    prefix: classpath:/templates
+    suffix: .html
   messages:
     basename: messages
     encoding: UTF-8
@@ -54,7 +55,7 @@ quotes:
       wkn: A0YEDL
       name: iShares NASDAQ 100 UCITS ETF USD (Acc)
   yahoo:
-    cron: 0 0/15 * * * ?
+    cron: 0 0/10 * * * ?
     work-dir: ${user.home}/Downloads/yahoo-finance
     downloads:
       -

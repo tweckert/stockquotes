@@ -12,6 +12,20 @@ services:
       - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data
+  app:
+    image: stockquotes:latest
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/stockquotes
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - QUOTES_YAHOO_WORK_DIR=/opt/yahoo/download
+    ports:
+      - 8080:8080
 volumes:
   db:
     driver: local

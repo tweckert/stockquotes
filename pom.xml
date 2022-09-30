@@ -114,6 +114,12 @@
             <artifactId>visualization-datasource</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <dependency>
+            <!-- https://stackoverflow.com/questions/64040255/invalid-version-number-version-number-may-be-negative-or-greater-than-255 -->
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>71.1</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -150,6 +156,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <addResources>true</addResources>
+                </configuration>
             </plugin>
             <plugin>
                 <!--
