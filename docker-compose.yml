@@ -3,6 +3,7 @@ services:
   db:
     image: postgres:14.1-alpine
     restart: always
+    container_name: stockquotes_db
     environment:
       LC_ALL: C.UTF-8
       POSTGRES_DB: stockquotes
@@ -16,7 +17,7 @@ services:
     image: stockquotes:latest
     build:
       context: .
-    container_name: app
+    container_name: stockquotes_app
     depends_on:
       - db
     environment:
