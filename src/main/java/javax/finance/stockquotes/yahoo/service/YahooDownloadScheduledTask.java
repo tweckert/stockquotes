@@ -6,12 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.finance.stockquotes.constant.StockQuotesApplicationConstants;
 import javax.finance.stockquotes.service.DownloadService;
-import javax.finance.stockquotes.service.ScheduledTask;
+import javax.finance.stockquotes.service.impl.AbstractScheduledTask;
 import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
 import java.io.File;
 import java.nio.file.StandardCopyOption;
@@ -20,39 +21,48 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Service
-public class YahooDownloadScheduledTask implements ScheduledTask, InitializingBean {
+public class YahooDownloadScheduledTask extends AbstractScheduledTask implements InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(YahooDownloadScheduledTask.class);
     private static final String DOWNLOAD_POSTFIX = ".download";
 
     private final DownloadService downloadService;
     private final YahooConfigurationProperties yahooConfigurationProperties;
+    private final String cronExpression;
 
     @Autowired
     public YahooDownloadScheduledTask(final DownloadService downloadService,
-                                      final YahooConfigurationProperties yahooConfigurationProperties) {
+                                      final YahooConfigurationProperties yahooConfigurationProperties,
+                                      @Value("${quotes.yahoo.cron}") final String cronExpression) {
         this.downloadService = downloadService;
         this.yahooConfigurationProperties = yahooConfigurationProperties;
+        this.cronExpression = cronExpression;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         FileUtils.createParentDirectories(yahooConfigurationProperties.getWorkDir());
+        logNextExecution(cronExpression);
     }
 
     @Scheduled(cron = "${quotes.yahoo.cron}", zone = StockQuotesApplicationConstants.DEFAULT_TIMEZONE_ID)
     @Override
     public void execute() {
 
-        final LocalDateTime endTime = LocalDateTime.now(ZoneId.systemDefault());
-        final LocalDateTime startTime = endTime.minusYears(10);
+        try {
 
-        for (final YahooConfigurationProperties.DownloadProperties downloadProperties : yahooConfigurationProperties.getDownloads()) {
+            final LocalDateTime endTime = LocalDateTime.now(ZoneId.systemDefault());
+            final LocalDateTime startTime = endTime.minusYears(10);
 
-            final String sourceUrl = downloadProperties.getUrl();
-            final String destinationFile = downloadProperties.getFile();
+            for (final YahooConfigurationProperties.DownloadProperties downloadProperties : yahooConfigurationProperties.getDownloads()) {
 
-            downloadStockQuotes(startTime, endTime, sourceUrl, destinationFile);
+                final String sourceUrl = downloadProperties.getUrl();
+                final String destinationFile = downloadProperties.getFile();
+
+                downloadStockQuotes(startTime, endTime, sourceUrl, destinationFile);
+            }
+        } finally {
+            logNextExecution(cronExpression);
         }
     }
 
@@ -80,13 +90,15 @@ public class YahooDownloadScheduledTask implements ScheduledTask, InitializingBe
             }
 
             final File sourceFile = downloadService.fetchUrl(formattedSourceUrl, downloadFile.getAbsolutePath());
-            final File destinationFile = new File(workDir, destinationFilename.trim());
+            if (sourceFile != null) {
 
-            FileUtils.moveFile(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                final File destinationFile = new File(workDir, destinationFilename.trim());
+                FileUtils.moveFile(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
-            if (LOG.isInfoEnabled()) {
-                LOG.info(StringUtils.join("Moved download file '", downloadFilename,
-                        "' to import file '", destinationFilename, "' in work dir '", workDir.getAbsolutePath(), "'"));
+                if (LOG.isInfoEnabled()) {
+                    LOG.info(StringUtils.join("Moved download file '", downloadFilename,
+                            "' to import file '", destinationFilename, "' in work dir '", workDir.getAbsolutePath(), "'"));
+                }
             }
         } catch (final Exception e) {
             if (LOG.isErrorEnabled()) {

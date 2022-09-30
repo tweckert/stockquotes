@@ -4,4 +4,6 @@ public interface ScheduledTask {
 
     void execute();
 
+    void logNextExecution(final String cron);
+
 }

@@ -64,8 +64,13 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
         FileUtils.forceMkdir(yahooConfigurationProperties.getWorkDir());
 
         if (LOG.isInfoEnabled()) {
-            LOG.info(StringUtils.join("Yahoo work directory is set to '", yahooConfigurationProperties.getWorkDir(), "'"));
+            LOG.info(StringUtils.join("Yahoo work directory is set to: '", yahooConfigurationProperties.getWorkDir(), "'"));
         }
+    }
+
+    @Override
+    public void logNextExecution(final String cron) {
+        // intentionally left blank
     }
 
     @Override
