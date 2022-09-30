@@ -1,5 +1,20 @@
 version: "3"
 services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/portainer-data:/data
+    ports:
+      - 9000:9000
+    depends_on:
+      - db
+      - app
   db:
     image: postgres:14.1-alpine
     restart: always
@@ -13,6 +28,11 @@ services:
       - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   app:
     image: stockquotes:latest
     build:
@@ -27,6 +47,11 @@ services:
       - QUOTES_YAHOO_WORK_DIR=/opt/yahoo/download
     ports:
       - 8080:8080
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
 volumes:
   db:
     driver: local
