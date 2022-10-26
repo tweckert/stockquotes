@@ -30,6 +30,12 @@ spring:
     encoding: UTF-8
     fallback-to-system-locale: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
 #
 # files are mapped to imports by filename
 # imports are mapped to stocks by WKN

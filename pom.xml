@@ -68,6 +68,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <!-- Micrometer -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
         <!-- database -->
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -195,7 +200,9 @@
                 <configuration>
                     <changeLogFile>src/main/resources/liquibase/changelog.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/liquibase/diff-changelog.xml</diffChangeLogFile>
-                    <referenceUrl>hibernate:spring:javax.finance.stockquotes.persistence.entity?hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;dialect=org.hibernate.dialect.H2Dialect</referenceUrl>
+                    <referenceUrl>
+                        hibernate:spring:javax.finance.stockquotes.persistence.entity?hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;dialect=org.hibernate.dialect.H2Dialect
+                    </referenceUrl>
                     <driver>org.postgresql.Driver</driver>
                     <url>jdbc:postgresql://localhost:5432/stockquotes</url>
                     <username>postgres</username>
