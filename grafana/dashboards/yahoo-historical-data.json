@@ -31,12 +31,13 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "AnlT9hHVz"
+        "uid": "Uj9xmoHVk"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "fixedColor": "green",
+            "mode": "fixed"
           },
           "mappings": [],
           "thresholds": {
@@ -56,8 +57,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 5,
+        "h": 4,
+        "w": 4,
         "x": 0,
         "y": 0
       },
@@ -81,7 +82,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "AnlT9hHVz"
+            "uid": "Uj9xmoHVk"
           },
           "editorMode": "builder",
           "expr": "yahoo_import_success_count_total",
@@ -90,13 +91,13 @@
           "refId": "A"
         }
       ],
-      "title": "Successful Imports",
+      "title": "Success Imports",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "AnlT9hHVz"
+        "uid": "Uj9xmoHVk"
       },
       "fieldConfig": {
         "defaults": {
@@ -122,9 +123,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 5,
-        "x": 5,
+        "h": 4,
+        "w": 4,
+        "x": 4,
         "y": 0
       },
       "id": 4,
@@ -147,7 +148,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "AnlT9hHVz"
+            "uid": "Uj9xmoHVk"
           },
           "editorMode": "builder",
           "expr": "yahoo_import_error_count_total",
@@ -173,7 +174,7 @@
   },
   "timepicker": {},
   "timezone": "utc",
-  "title": "Yahoo Historical Data",
+  "title": "Yahoo Historical Data (Stockquotes)",
   "uid": "x7nVChN4k",
   "version": 3,
   "weekStart": "monday"
