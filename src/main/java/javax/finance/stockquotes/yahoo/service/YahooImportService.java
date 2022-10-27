@@ -38,10 +38,10 @@ public class YahooImportService extends AbstractImportService {
     }
 
     @Override
-    public void importHistoricalData(final Stock stock, final Frequency frequency, final File file) {
+    public boolean importHistoricalData(final Stock stock, final Frequency frequency, final File file) {
 
         if (file == null || stock == null || stock.getId() == null || stock.getId().longValue() == 0) {
-            return;
+            return false;
         }
 
         try (final Reader reader = new FileReader(file)) {
@@ -57,7 +57,7 @@ public class YahooImportService extends AbstractImportService {
                     StreamSupport.stream(csvRecordsIterable.spliterator(), false).collect(Collectors.toList());
 
             if (CollectionUtils.isEmpty(csvRecordList)) {
-                return;
+                return false;
             }
 
             final List<StockQuote> stockQuoteList = new ArrayList<>();
@@ -82,11 +82,16 @@ public class YahooImportService extends AbstractImportService {
             }
 
             importStockQuotes(stock, stockQuoteList, frequency);
+
+            return true;
         } catch (final Exception e) {
+
             if (LOG.isErrorEnabled()) {
                 LOG.error(StringUtils.join("Error importing stock data from file '",
                         file.getAbsolutePath(), "': ", e.getMessage()), e);
             }
+
+            return false;
         }
     }
 

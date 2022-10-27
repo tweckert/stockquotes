@@ -7,7 +7,7 @@
 
 ## How to run it
 * Stockquotes app
-  * [V1 chart for WKN 'A0RPWH': localhost:8080/chart/v1/A0RPWH](http://localhost:8080/chart/v1/A0RPWH)
+  * V1 chart for WKN 'A0RPWH': [http://localhost:8080/chart/v1/A0RPWH](http://localhost:8080/chart/v1/A0RPWH)
   * [Prometheus actuator](http://localhost:8080/actuator/prometheus)
 * [Portainer: localhost:9000](http://localhost:9000)
 * [Prometheus: localhost:9090](http://localhost:9090)
@@ -21,3 +21,4 @@
 * [Prometheus Documentation](https://prometheus.io/docs/introduction/overview/)
 * [Grafana Documentation](https://grafana.com/docs/)
 * [Portainer Documentation](https://docs.portainer.io/)
+* [Micrometer monitoring](https://micrometer.io/)

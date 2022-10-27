@@ -1,5 +1,7 @@
 package javax.finance.stockquotes.yahoo.service;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,18 +36,23 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
     private final Map<String, QuotesConfigurationProperties.StockProperties> stockPropertiesByWkn;
     private final StockRepository stockRepository;
     private final ImportService importService;
+    private final Counter errorImportCounter;
+    private final Counter successImportCounter;
 
     @Autowired
     public YahooImportScheduledTask(final YahooConfigurationProperties yahooConfigurationProperties,
                                     final QuotesConfigurationProperties quotesConfigurationProperties,
                                     final StockRepository stockRepository,
-                                    final ImportService importService) {
+                                    final ImportService importService,
+                                    final MeterRegistry meterRegistry) {
         this.importPropertiesByFilename = new HashMap<>();
         this.stockPropertiesByWkn = new HashMap<>();
         this.yahooConfigurationProperties = yahooConfigurationProperties;
         this.quotesConfigurationProperties = quotesConfigurationProperties;
         this.stockRepository = stockRepository;
         this.importService = importService;
+        this.errorImportCounter = meterRegistry.counter("yahoo_import_error_count");
+        this.successImportCounter = meterRegistry.counter("yahoo_import_success_count");
     }
 
     @Override
@@ -110,15 +117,21 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
                 final String name = stockProperties.getName();
                 final Frequency frequency = importProperties.getFrequency();
 
-                importStockQuotes(isin, wkn, name, importFile, frequency);
+                final boolean success = importStockQuotes(isin, wkn, name, importFile, frequency);
+
+                if (!success) {
+                    errorImportCounter.increment();
+                } else {
+                    successImportCounter.increment();
+                }
             } finally {
                 FileUtils.deleteQuietly(importFile);
             }
         }
     }
 
-    protected void importStockQuotes(final String isin, final String wkn, final String name,
-                                     final File importFile, final Frequency frequency) {
+    protected boolean importStockQuotes(final String isin, final String wkn, final String name,
+                                        final File importFile, final Frequency frequency) {
 
         if (LOG.isInfoEnabled()) {
             LOG.info(StringUtils.join("Importing stock quotes from import file '",
@@ -126,7 +139,7 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
         }
 
         final Stock stock = createStockIfAbsent(isin, wkn, name);
-        importService.importHistoricalData(stock, frequency, importFile);
+        return importService.importHistoricalData(stock, frequency, importFile);
     }
 
     protected Stock createStockIfAbsent(final String isin, final String wkn, final String name) {

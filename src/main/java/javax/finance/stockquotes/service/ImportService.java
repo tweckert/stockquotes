@@ -6,6 +6,6 @@ import java.io.File;
 
 public interface ImportService {
 
-    void importHistoricalData(final Stock stock, final Frequency frequency, final File file);
+    boolean importHistoricalData(final Stock stock, final Frequency frequency, final File file);
 
 }

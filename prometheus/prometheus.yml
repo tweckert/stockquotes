@@ -8,5 +8,5 @@ scrape_configs:
     metrics_path: /actuator/prometheus
     static_configs:
       # configure the Docker service name here
-      - targets: ['app:8080']
+      - targets: ['application:8080']
 

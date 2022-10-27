@@ -4,7 +4,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - ./env/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
   grafana:
@@ -13,9 +13,9 @@ services:
     ports:
       - 3000:3000
     env_file:
-      - ./env/grafana.env
+      - ./grafana/grafana.env
     volumes:
-      - gf:/var/lib/grafana
+      - grafana_storage:/var/lib/grafana
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -29,8 +29,8 @@ services:
     ports:
       - 9000:9000
     depends_on:
-      - app
-  db:
+      - application
+  database:
     image: postgres:14.1-alpine
     restart: always
     container_name: stockquotes_db
@@ -42,21 +42,21 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - db:/var/lib/postgresql/data
+      - database_storage:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 15s
       timeout: 5s
       retries: 5
-  app:
+  application:
     image: stockquotes:latest
     build:
       context: .
     container_name: stockquotes_app
     depends_on:
-      - db
+      - database
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/stockquotes
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/stockquotes
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - QUOTES_YAHOO_WORK_DIR=/opt/yahoo/download
@@ -68,7 +68,7 @@ services:
       timeout: 5s
       retries: 5
 volumes:
-  db:
+  database_storage:
     driver: local
-  gf:
+  grafana_storage:
     driver: local
