@@ -23,7 +23,7 @@ services:
     image: fluentd-elasticsearch:latest
     container_name: fluentd
     volumes:
-      - ./fluent/fluent.conf:/fluentd/etc/fluent.conf
+      - ./fluent/conf/fluent.conf:/fluentd/etc/fluent.conf
     ports:
       - 24224:24224
       - 24224:24224/udp
