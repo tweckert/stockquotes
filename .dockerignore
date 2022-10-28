@@ -3,6 +3,7 @@
 *.iml
 *.ipr
 *.md
-.target/
+target/
+out/
 .vscode/
 .git/
