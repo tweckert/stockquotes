@@ -15,6 +15,7 @@
 ## How to run it
 * Stockquotes app
   * V1 chart for WKN 'A0RPWH': [http://localhost:8080/chart/v1/A0RPWH](http://localhost:8080/chart/v1/A0RPWH)
+  * V1 chart for WKN 'A0YEDG' with range year-to-date and weekly frequency: [localhost:8080/chart/v1/A0YEDG?range=ytd&frequency=weekly](http://localhost:8080/chart/v1/A0YEDG?range=ytd&frequency=weekly)
   * [Prometheus actuator](http://localhost:8080/actuator/prometheus)
 * Portainer: [localhost:9000](http://localhost:9000)
 * Prometheus:[localhost:9090](http://localhost:9090)
