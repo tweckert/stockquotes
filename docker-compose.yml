@@ -1,5 +1,34 @@
 version: "3"
+
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - elasticsearch_journal:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.2.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+  fluentd:
+    image: fluentd-elasticsearch:latest
+    container_name: fluentd
+    volumes:
+      - ./fluent/fluent.conf:/fluentd/etc/fluent.conf
+    ports:
+      - 24224:24224
+      - 24224:24224/udp
+    depends_on:
+      - elasticsearch
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -55,11 +84,14 @@ services:
     container_name: stockquotes_app
     depends_on:
       - database
+      - fluentd
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/stockquotes
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - QUOTES_YAHOO_WORK_DIR=/opt/yahoo/download
+      - FLUENTD_HOST=fluentd
+      - FLUENTD_PORT=24224
     ports:
       - 8080:8080
     healthcheck:
@@ -67,8 +99,11 @@ services:
       interval: 15s
       timeout: 5s
       retries: 5
+
 volumes:
   database_journal:
     driver: local
   grafana_journal:
+    driver: local
+  elasticsearch_journal:
     driver: local

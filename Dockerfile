@@ -22,4 +22,5 @@ WORKDIR /opt/app
 RUN mkdir -p /opt/yahoo/download
 RUN apk --no-cache add curl
 COPY --from=MAVEN_BUILD /opt/build/target/stockquotes-0.0.1-SNAPSHOT.war /opt/app
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","/opt/app/stockquotes-0.0.1-SNAPSHOT.war"]
