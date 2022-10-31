@@ -1,5 +1,7 @@
 package javax.finance.stockquotes.yahoo.service;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,14 +31,19 @@ public class YahooDownloadScheduledTask extends AbstractScheduledTask implements
     private final DownloadService downloadService;
     private final YahooConfigurationProperties yahooConfigurationProperties;
     private final String cronExpression;
+    private final Counter errorDownloadCounter;
+    private final Counter successDownloadCounter;
 
     @Autowired
     public YahooDownloadScheduledTask(final DownloadService downloadService,
                                       final YahooConfigurationProperties yahooConfigurationProperties,
-                                      @Value("${quotes.yahoo.cron}") final String cronExpression) {
+                                      @Value("${quotes.yahoo.cron}") final String cronExpression,
+                                      final MeterRegistry meterRegistry) {
         this.downloadService = downloadService;
         this.yahooConfigurationProperties = yahooConfigurationProperties;
         this.cronExpression = cronExpression;
+        this.errorDownloadCounter = meterRegistry.counter("yahoo_download_error_count");
+        this.successDownloadCounter = meterRegistry.counter("yahoo_download_success_count");
     }
 
     @Override
@@ -94,13 +101,19 @@ public class YahooDownloadScheduledTask extends AbstractScheduledTask implements
 
                 final File destinationFile = new File(workDir, destinationFilename.trim());
                 FileUtils.moveFile(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                successDownloadCounter.increment();
 
                 if (LOG.isInfoEnabled()) {
                     LOG.info(StringUtils.join("Moved download file '", downloadFilename,
                             "' to import file '", destinationFilename, "' in work dir '", workDir.getAbsolutePath(), "'"));
                 }
+            } else {
+                errorDownloadCounter.increment();
             }
         } catch (final Exception e) {
+
+            errorDownloadCounter.increment();
+
             if (LOG.isErrorEnabled()) {
                 LOG.error(StringUtils.join("Error downloading file '", destinationFilename,
                         "' from URL '", formattedSourceUrl, "': ", e.getMessage()), e);
