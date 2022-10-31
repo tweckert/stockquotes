@@ -4,6 +4,7 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
     container_name: elasticsearch
+    restart: always
     environment:
       - discovery.type=single-node
     volumes:
@@ -13,6 +14,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:7.2.0
     container_name: kibana
+    restart: always
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
@@ -22,6 +24,7 @@ services:
   fluentd:
     image: fluentd-elasticsearch:latest
     container_name: fluentd
+    restart: always
     volumes:
       - ./fluent/conf/fluent.conf:/fluentd/etc/fluent.conf
     ports:
@@ -30,16 +33,18 @@ services:
     depends_on:
       - elasticsearch
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v2.39.1
     container_name: prometheus
+    restart: always
     volumes:
       - prometheus_journal:/prometheus
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:9.2.2
     container_name: grafana
+    restart: always
     depends_on:
       - prometheus
     ports:
@@ -49,7 +54,7 @@ services:
     volumes:
       - grafana_journal:/var/lib/grafana
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce:2.16.0-alpine
     container_name: portainer
     restart: unless-stopped
     security_opt:
@@ -64,8 +69,8 @@ services:
       - application
   database:
     image: postgres:14.1-alpine
-    restart: always
     container_name: stockquotes_db
+    restart: always
     environment:
       LC_ALL: C.UTF-8
       POSTGRES_DB: stockquotes
