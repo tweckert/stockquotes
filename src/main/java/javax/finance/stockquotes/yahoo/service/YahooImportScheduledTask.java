@@ -21,7 +21,6 @@ import javax.finance.stockquotes.service.ScheduledTask;
 import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
 import java.io.File;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +30,6 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
     private static final Logger LOG = LoggerFactory.getLogger(YahooImportScheduledTask.class);
 
     private final YahooConfigurationProperties yahooConfigurationProperties;
-    private final QuotesConfigurationProperties quotesConfigurationProperties;
     private final Map<String, YahooConfigurationProperties.ImportProperties> importPropertiesByFilename;
     private final Map<String, QuotesConfigurationProperties.StockProperties> stockPropertiesByWkn;
     private final StockRepository stockRepository;
@@ -45,10 +43,9 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
                                     final StockRepository stockRepository,
                                     final ImportService importService,
                                     final MeterRegistry meterRegistry) {
-        this.importPropertiesByFilename = new HashMap<>();
-        this.stockPropertiesByWkn = new HashMap<>();
+        this.importPropertiesByFilename = yahooConfigurationProperties.getImportPropertiesByFilename();
+        this.stockPropertiesByWkn = quotesConfigurationProperties.getStockPropertiesByWkn();
         this.yahooConfigurationProperties = yahooConfigurationProperties;
-        this.quotesConfigurationProperties = quotesConfigurationProperties;
         this.stockRepository = stockRepository;
         this.importService = importService;
         this.errorImportCounter = meterRegistry.counter("yahoo_import_error_count");
@@ -57,16 +54,6 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
-        this.importPropertiesByFilename.clear();
-        for (final YahooConfigurationProperties.ImportProperties importProperties : yahooConfigurationProperties.getImports()) {
-            this.importPropertiesByFilename.put(importProperties.getFile(), importProperties);
-        }
-
-        this.stockPropertiesByWkn.clear();
-        for (final QuotesConfigurationProperties.StockProperties stockProperties : quotesConfigurationProperties.getStocks()) {
-            this.stockPropertiesByWkn.put(stockProperties.getWkn().toUpperCase(), stockProperties);
-        }
 
         FileUtils.forceMkdir(yahooConfigurationProperties.getWorkDir());
 

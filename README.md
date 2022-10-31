@@ -16,10 +16,10 @@
 * Stockquotes app
   * V1 chart for WKN 'A0RPWH': [http://localhost:8080/chart/v1/A0RPWH](http://localhost:8080/chart/v1/A0RPWH)
   * V1 chart for WKN 'A0YEDG' with range year-to-date and weekly frequency: [localhost:8080/chart/v1/A0YEDG?range=ytd&frequency=weekly](http://localhost:8080/chart/v1/A0YEDG?range=ytd&frequency=weekly)
-  * [Prometheus actuator](http://localhost:8080/actuator/prometheus)
+  * Prometheus actuator: [http://localhost:8080/actuator/prometheus](localhost:8080/actuator/prometheus)
 * Portainer: [localhost:9000](http://localhost:9000)
 * Prometheus:[localhost:9090](http://localhost:9090)
-  * [Prometheus stockquotes_app target](http://localhost:9090/targets?search=#pool-stockquotes_app)
+  * Prometheus stockquotes_app target: [http://localhost:9090/targets?search=#pool-stockquotes_app](localhost:9090/targets?search=#pool-stockquotes_app)
 * Grafana: [localhost:3000](http://localhost:3000)
   * [JVM Micrometer Dashboard](https://grafana.com/grafana/dashboards/4701-jvm-micrometer/)
 * Elasticsearch: [localhost:9200](http://localhost:9200)

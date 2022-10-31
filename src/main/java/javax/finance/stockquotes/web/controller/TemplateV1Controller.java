@@ -36,6 +36,11 @@ public class TemplateV1Controller extends AbstractController {
         this.stockService = stockService;
     }
 
+    @GetMapping
+    public String index() {
+        return "/index.html";
+    }
+
     @GetMapping(value = "/chart/v1/{stockSymbol}")
     public ModelAndView chart(@PathVariable(required = true) final String stockSymbol,
                               @RequestParam(name = "range", required = false) final String timeRangeName,
