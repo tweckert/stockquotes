@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.finance.stockquotes.constant.StockQuotesApplicationConstants;
+import javax.finance.stockquotes.service.CronCalculator;
 import javax.finance.stockquotes.service.DownloadService;
 import javax.finance.stockquotes.service.impl.AbstractScheduledTask;
 import javax.finance.stockquotes.yahoo.config.YahooConfigurationProperties;
@@ -38,12 +39,14 @@ public class YahooDownloadScheduledTask extends AbstractScheduledTask implements
     public YahooDownloadScheduledTask(final DownloadService downloadService,
                                       final YahooConfigurationProperties yahooConfigurationProperties,
                                       @Value("${quotes.yahoo.cron}") final String cronExpression,
+                                      final CronCalculator cronCalculator,
                                       final MeterRegistry meterRegistry) {
+        super("yahoo_download_next_execution_millis", cronCalculator, meterRegistry);
         this.downloadService = downloadService;
         this.yahooConfigurationProperties = yahooConfigurationProperties;
         this.cronExpression = cronExpression;
-        this.errorDownloadCounter = meterRegistry.counter("yahoo_download_error_count");
-        this.successDownloadCounter = meterRegistry.counter("yahoo_download_success_count");
+        this.errorDownloadCounter = Counter.builder("yahoo_download_error_count").register(meterRegistry);
+        this.successDownloadCounter = Counter.builder("yahoo_download_success_count").register(meterRegistry);
     }
 
     @Override

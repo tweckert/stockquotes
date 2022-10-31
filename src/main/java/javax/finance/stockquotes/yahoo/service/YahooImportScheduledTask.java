@@ -48,8 +48,8 @@ public class YahooImportScheduledTask implements ScheduledTask, InitializingBean
         this.yahooConfigurationProperties = yahooConfigurationProperties;
         this.stockRepository = stockRepository;
         this.importService = importService;
-        this.errorImportCounter = meterRegistry.counter("yahoo_import_error_count");
-        this.successImportCounter = meterRegistry.counter("yahoo_import_success_count");
+        this.errorImportCounter = Counter.builder("yahoo_import_error_count").register(meterRegistry);
+        this.successImportCounter = Counter.builder("yahoo_import_success_count").register(meterRegistry);
     }
 
     @Override
