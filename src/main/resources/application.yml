@@ -61,6 +61,10 @@ quotes:
       isin: IE00B53SZB19
       wkn: A0YEDL
       name: iShares NASDAQ 100 UCITS ETF USD (Acc)
+    -
+      isin: NL0012044747
+      wkn: A2AR94
+      name: Shop Apotheke Europe
   yahoo:
     cron: 0 0/10 * * * ?
     work-dir: ${user.home}/Downloads/yahoo-finance
@@ -101,6 +105,16 @@ quotes:
       -
         url: https://query1.finance.yahoo.com/v7/finance/download/CSNDX.SW?period1={0}&period2={1}&interval=1mo&events=history&includeAdjustedClose=true
         file: A0YEDL_monthly.csv
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/SAE.DE?period1={0}&period2={1}&interval=1d&events=history&includeAdjustedClose=true
+        file: A2AR94_daily.csv
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/SAE.DE?period1={0}&period2={1}&interval=1wk&events=history&includeAdjustedClose=true
+        file: A2AR94_weekly.csv
+      -
+        url: https://query1.finance.yahoo.com/v7/finance/download/SAE.DE?period1={0}&period2={1}&interval=1mo&events=history&includeAdjustedClose=true
+        file: A2AR94_monthly.csv
+
     imports:
       -
         wkn: A0RPWH
@@ -149,4 +163,16 @@ quotes:
       -
         wkn: A0YEDL
         file: A0YEDL_monthly.csv
+        frequency: monthly
+      -
+        wkn: A2AR94
+        file: A2AR94_daily.csv
+        frequency: daily
+      -
+        wkn: A2AR94
+        file: A2AR94_weekly.csv
+        frequency: weekly
+      -
+        wkn: A2AR94
+        file: A2AR94_monthly.csv
         frequency: monthly

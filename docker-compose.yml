@@ -85,6 +85,18 @@ services:
       interval: 15s
       timeout: 5s
       retries: 5
+  dbadmin:
+    image: dpage/pgadmin4:6.16
+    container_name: stockquotes_db_admin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-nimda}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - dbadmin_journal:/var/lib/pgadmin
+    ports:
+      - 5050:80
   application:
     image: stockquotes:latest
     build:
@@ -116,4 +128,6 @@ volumes:
   prometheus_journal:
     driver: local
   elasticsearch_journal:
+    driver: local
+  dbadmin_journal:
     driver: local

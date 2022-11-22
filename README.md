@@ -24,8 +24,11 @@
   * [JVM Micrometer Dashboard](https://grafana.com/grafana/dashboards/4701-jvm-micrometer/)
 * Elasticsearch: [localhost:9200](http://localhost:9200)
   * List all indices: [localhost:9200/_cat/indices](http://localhost:9200/_cat/indices)
-* Kibana: [localhost:5601](http://localhost:5601) 
-
+  * View all `logstash-*` indices: [localhost:9200/logstash-*?pretty](http://localhost:9200/logstash-*?pretty)
+* Kibana: [localhost:5601](http://localhost:5601)
+  * Create an index pattern `logstash-*`
+* pgAdmin: [localhost:5050](http://localhost:5050) 
+  
 ## Documentation
 * [Google Charts](https://developers.google.com/chart/interactive/docs)
 * [Apache Maven](https://maven.apache.org/guides/index.html)
