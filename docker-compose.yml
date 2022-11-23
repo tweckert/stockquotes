@@ -1,6 +1,14 @@
 version: "3"
 
 services:
+  mongodb:
+    image: mongo:4.2
+    container_name: mongodb
+    restart: always
+    volumes:
+      - mongodb_journal:/data/db
+    ports:
+      - 27017:27017
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
     container_name: elasticsearch
@@ -21,17 +29,36 @@ services:
       - 5601:5601
     depends_on:
       - elasticsearch
-  fluentd:
-    image: fluentd-elasticsearch:latest
-    container_name: fluentd
+  graylog:
+    image: graylog/graylog:4.3
+    container_name: graylog
     restart: always
     volumes:
-      - ./fluent/conf/fluent.conf:/fluentd/etc/fluent.conf
-    ports:
-      - 24224:24224
-      - 24224:24224/udp
-    depends_on:
+      - graylog_journal:/usr/share/graylog/data/journal
+    environment:
+      # password pepper
+      - GRAYLOG_PASSWORD_SECRET=nimdanimdanimda123
+      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:9999/
+      #- GRAYLOG_MONGODB_URI=mongodb://mongodb:27017/graylog
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    links:
+      - mongodb:mongo
       - elasticsearch
+    depends_on:
+      - mongodb
+      - elasticsearch
+    ports:
+      # Graylog web interface and REST API
+      - 9999:9000
+      # Syslog TCP
+      - 1514:1514
+      # Syslog UDP
+      - 1514:1514/udp
+      # GELF TCP
+      - 12201:12201
+      # GELF UDP
+      - 12201:12201/udp
   prometheus:
     image: prom/prometheus:v2.39.1
     container_name: prometheus
@@ -99,19 +126,16 @@ services:
       - 5050:80
   application:
     image: stockquotes:latest
-    build:
-      context: .
     container_name: stockquotes_app
     depends_on:
       - database
-      - fluentd
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/stockquotes
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - QUOTES_YAHOO_WORK_DIR=/opt/yahoo/download
-      - FLUENTD_HOST=fluentd
-      - FLUENTD_PORT=24224
+      - GRAYLOG_HOST=graylog
+      #- GRAYLOG_PORT=12201
     ports:
       - 8080:8080
     healthcheck:
@@ -130,4 +154,8 @@ volumes:
   elasticsearch_journal:
     driver: local
   dbadmin_journal:
+    driver: local
+  mongodb_journal:
+    driver: local
+  graylog_journal:
     driver: local
