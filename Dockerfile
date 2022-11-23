@@ -1,5 +1,5 @@
 #
-# docker build -t stockquotes:latest .
+# docker build --no-cache -t stockquotes:latest .
 #
 
 #
