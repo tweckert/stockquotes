@@ -2,11 +2,9 @@
 
 ## Commands
 * Development:
-  * start Postgres container for development: `docker-compose -f docker-compose-postgres.yml up -d`
+  * start Postgres container for development: `docker-compose -f docker-compose-dev.yml up -d`
 * Stockquotes service:
-  * build Docker image: `docker build -t stockquotes:latest .`
-* fluentd with Elasticsearch plugin:
-  * build Docker image: `cd fluent && docker build -t fluentd-elasticsearch:latest .`
+  * build Docker image: `docker build -t stockquotes:latest .` or `docker build --no-cache -t stockquotes:latest .`
 * Docker: 
   * Start all services: `docker-compose up -d`
   * Delete all containers: `docker rm -f $(docker ps -a -q)` 
@@ -28,6 +26,7 @@
 * Kibana: [localhost:5601](http://localhost:5601)
   * Create an index pattern `logstash-*`
 * pgAdmin: [localhost:5050](http://localhost:5050) 
+* Graylog: [localhost:9999](http://localhost:9999)
   
 ## Documentation
 * [Google Charts](https://developers.google.com/chart/interactive/docs)

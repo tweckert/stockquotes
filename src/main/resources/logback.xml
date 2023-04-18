@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
 
-    <!-- if there is no ENV var FLUENTD_HOST then use localhost -->
-    <property name="FLUENTD_HOST" value="${FLUENTD_HOST:-localhost}"/>
-    <property name="FLUENTD_PORT" value="${FLUENTD_PORT:-24224}"/>
+    <!-- if there is no ENV var GRAYLOG_HOST then use localhost -->
+    <property name="GRAYLOG_HOST" value="${GRAYLOG_HOST:-localhost}"/>
+    <property name="GRAYLOG_PORT" value="${GRAYLOG_PORT:-12201}"/>
 
-    <appender name="FLUENT" class="ch.qos.logback.more.appenders.DataFluentAppender">
-        <!-- Check tag and label fluentd info: https://docs.fluentd.org/configuration/config-file -->
-        <tag>service.stockquotes.access</tag>
-        <label>normal</label>
-        <remoteHost>${FLUENTD_HOST}</remoteHost>
-        <port>${FLUENTD_PORT}</port>
+    <appender name="GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
+        <graylogHost>${GRAYLOG_HOST}</graylogHost>
+        <graylogPort>${GRAYLOG_PORT}</graylogPort>
+        <maxChunkSize>508</maxChunkSize>
+        <useCompression>true</useCompression>
+        <encoder class="de.siegmar.logbackgelf.GelfEncoder">
+            <originHost>${GRAYLOG_HOST}</originHost>
+            <includeRawMessage>false</includeRawMessage>
+            <includeMarker>true</includeMarker>
+            <includeMdcData>true</includeMdcData>
+            <includeCallerData>true</includeCallerData>
+            <includeRootCauseData>true</includeRootCauseData>
+            <includeLevelName>true</includeLevelName>
+            <shortPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%nopex</pattern>
+            </shortPatternLayout>
+            <fullPatternLayout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%m%n</pattern>
+            </fullPatternLayout>
+            <staticField>app_name:graylog-spring</staticField>
+        </encoder>
     </appender>
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} %class.%method:%L - %msg%n
-            </Pattern>
-        </layout>
-    </appender>
-
-    <root level="info">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FLUENT"/>
+    <root level="DEBUG">
+        <appender-ref ref="GELF" />
+        <appender-ref ref="CONSOLE" />
     </root>
 
 </configuration>

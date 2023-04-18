@@ -1,5 +1,7 @@
 package javax.finance.stockquotes.persistence.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -142,6 +144,38 @@ public class StockQuote {
                 .append("low", low)
                 .append("frequency", frequency)
                 .toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(stock)
+                .append(date)
+                .append(frequency)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+
+        final StockQuote otherStockQuote = (StockQuote) obj;
+        return new EqualsBuilder()
+                .append(stock, otherStockQuote.getStock())
+                .append(date, otherStockQuote.getDate())
+                .append(frequency, otherStockQuote.getFrequency())
+                .isEquals();
     }
 
 }
