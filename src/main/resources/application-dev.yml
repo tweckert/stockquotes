@@ -15,5 +15,9 @@ spring:
 
 quotes:
   yahoo:
-    cron: "0 0/5 * * * ?"
+    # every minute
+    cron: "0 0/1 * * * ?"
+    # every 5 minutes
+    #cron: "0 0/5 * * * ?"
+    # disabled
     #cron: "-"

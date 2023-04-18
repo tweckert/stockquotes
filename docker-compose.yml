@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+
   mongodb:
     image: mongo:4.2
     container_name: mongodb
@@ -9,6 +10,7 @@ services:
       - mongodb_journal:/data/db
     ports:
       - 27017:27017
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
     container_name: elasticsearch
@@ -19,6 +21,7 @@ services:
       - elasticsearch_journal:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.2.0
     container_name: kibana
@@ -29,6 +32,13 @@ services:
       - 5601:5601
     depends_on:
       - elasticsearch
+
+  #
+  # https://go2docs.graylog.org/5-0/getting_in_log_data/gelf.html#GELFviaUDP
+  # https://go2docs.graylog.org/5-0/what_more_can_graylog_do_for_me/content_packs.html
+  # https://go2docs.graylog.org/5-0/what_more_can_graylog_do_for_me/content_packs.html#HowdoIcreateaContentPack
+  # https://stackoverflow.com/questions/26615893/automatically-create-udp-input-for-graylog2-server-running-in-docker
+  #
   graylog:
     image: graylog/graylog:4.3
     container_name: graylog
@@ -59,6 +69,7 @@ services:
       - 12201:12201
       # GELF UDP
       - 12201:12201/udp
+
   prometheus:
     image: prom/prometheus:v2.39.1
     container_name: prometheus
@@ -68,6 +79,7 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
+
   grafana:
     image: grafana/grafana:9.2.2
     container_name: grafana
@@ -80,6 +92,7 @@ services:
       - ./grafana/grafana.env
     volumes:
       - grafana_journal:/var/lib/grafana
+
   portainer:
     image: portainer/portainer-ce:2.16.0-alpine
     container_name: portainer
@@ -94,6 +107,7 @@ services:
       - 9000:9000
     depends_on:
       - application
+
   database:
     image: postgres:14.1-alpine
     container_name: stockquotes_db
@@ -112,6 +126,7 @@ services:
       interval: 15s
       timeout: 5s
       retries: 5
+
   dbadmin:
     image: dpage/pgadmin4:6.16
     container_name: stockquotes_db_admin
@@ -124,6 +139,7 @@ services:
       - dbadmin_journal:/var/lib/pgadmin
     ports:
       - 5050:80
+
   application:
     image: stockquotes:latest
     container_name: stockquotes_app
